@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Blood Connector — Donor Sign Up</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,700;0,9..144,900;1,9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+:root{--red:#B91C1C;--red-deep:#7F1D1D;--red-light:#FEF2F2;--red-soft:#FECACA;--red-mid:#FCA5A5;--ink:#0F0A0A;--ink-2:#3D2929;--muted:#6B5B5B;--subtle:#A8938E;--border:#EFE4E4;--cream:#FDFAF9;}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Plus Jakarta Sans',sans-serif;color:var(--ink);background:var(--cream);-webkit-font-smoothing:antialiased;min-height:100vh}
+nav{display:flex;align-items:center;justify-content:space-between;padding:14px 48px;border-bottom:1px solid var(--border);background:#fff}
+.logo{display:flex;align-items:center;gap:9px;text-decoration:none}
+.logo-mark{width:24px;height:24px;background:var(--red);border-radius:50% 50% 50% 4px;transform:rotate(-35deg)}
+.logo-name{font-family:'Fraunces',serif;font-size:17px;font-weight:700;color:var(--red)}
+.nav-back{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:500;color:var(--muted);cursor:pointer;background:none;border:none;font-family:'Plus Jakarta Sans',sans-serif;text-decoration:none}
+.page{display:grid;grid-template-columns:1fr 420px;min-height:calc(100vh - 53px)}
+/* LEFT */
+.left{background:var(--red);padding:52px 44px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden}
+.left::before{content:'';position:absolute;bottom:-80px;right:-80px;width:360px;height:360px;background:rgba(255,255,255,.05);border-radius:50%}
+.left::after{content:'';position:absolute;top:-60px;left:-60px;width:240px;height:240px;background:rgba(255,255,255,.04);border-radius:50%}
+.left-top{position:relative;z-index:1}
+.left-tag{display:inline-block;background:rgba(255,255,255,.15);color:rgba(255,255,255,.9);font-size:11px;font-weight:600;padding:4px 12px;border-radius:100px;letter-spacing:0.8px;text-transform:uppercase;margin-bottom:26px}
+.left h2{font-family:'Fraunces',serif;font-size:40px;font-weight:700;color:#fff;line-height:1.1;letter-spacing:-1.2px;margin-bottom:12px}
+.left h2 em{font-style:italic;opacity:.8}
+.left p{font-size:14px;color:rgba(255,255,255,.7);line-height:1.7;max-width:300px}
+.sp-label{font-size:11px;font-weight:600;color:rgba(255,255,255,.5);letter-spacing:0.8px;text-transform:uppercase;margin-bottom:14px}
+.sp-steps{display:flex;flex-direction:column;gap:0;position:relative;z-index:1}
+.sp-step{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.1)}
+.sp-step:last-child{border-bottom:none}
+.sp-dot{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:10px;font-weight:700}
+.sp-step.active .sp-dot{background:#fff;color:var(--red)}
+.sp-step.pending .sp-dot{background:rgba(255,255,255,.1);color:rgba(255,255,255,.35);font-size:10px}
+.sp-title{font-size:13px;font-weight:600;color:#fff}
+.sp-step.pending .sp-title{color:rgba(255,255,255,.4)}
+.sp-sub{font-size:11px;color:rgba(255,255,255,.45);margin-top:2px}
+.sp-step.active .sp-sub{color:rgba(255,255,255,.65)}
+/* RIGHT */
+.right{background:#fff;padding:44px 40px;overflow-y:auto}
+.form-eyebrow{font-size:11px;font-weight:600;color:var(--red);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:7px}
+.form-eyebrow::before{content:'';width:14px;height:1.5px;background:var(--red);display:block}
+.form-top h1{font-family:'Fraunces',serif;font-size:28px;font-weight:700;letter-spacing:-0.7px;color:var(--ink);margin-bottom:7px}
+.form-top p{font-size:13px;color:var(--muted);line-height:1.65;margin-bottom:30px}
+.fdiv-label{font-size:12px;font-weight:600;color:var(--ink);margin:24px 0 15px;display:flex;align-items:center;gap:10px}
+.fdiv-label::after{content:'';flex:1;height:1px;background:var(--border)}
+.field-group{margin-bottom:18px}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px}
+label{display:block;font-size:12px;font-weight:600;color:var(--ink-2);margin-bottom:5px;letter-spacing:0.1px}
+label .req{color:var(--red)}
+input[type=text],input[type=email],input[type=tel],input[type=date],select{width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:9px;font-size:14px;font-family:'Plus Jakarta Sans',sans-serif;color:var(--ink);background:#fff;outline:none;transition:border-color .2s;-webkit-appearance:none;appearance:none}
+input:focus,select:focus{border-color:var(--red)}
+input::placeholder{color:#C4B4B4;font-size:13px}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23A8938E' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px;cursor:pointer}
+.field-hint{font-size:11px;color:var(--subtle);margin-top:5px;line-height:1.5}
+.age-error{font-size:11px;color:var(--red);margin-top:5px;display:none}
+/* BLOOD TYPE */
+.bt-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:6px}
+.bt-opt{position:relative}
+.bt-opt input{position:absolute;opacity:0;width:0;height:0}
+.bt-opt label{display:flex;align-items:center;justify-content:center;padding:10px 6px;border:1.5px solid var(--border);border-radius:9px;font-size:14px;font-weight:600;color:var(--muted);cursor:pointer;transition:all .2s;font-family:'Fraunces',serif;letter-spacing:-0.3px;margin-bottom:0}
+.bt-opt input:checked + label{border-color:var(--red);background:var(--red-light);color:var(--red)}
+.bt-opt label:hover{border-color:var(--red-mid)}
+/* GENDER */
+.gender-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:6px}
+.g-opt{position:relative}
+.g-opt input{position:absolute;opacity:0;width:0;height:0}
+.g-opt label{display:flex;align-items:center;justify-content:center;padding:10px;border:1.5px solid var(--border);border-radius:9px;font-size:13px;font-weight:500;color:var(--muted);cursor:pointer;transition:all .2s;margin-bottom:0}
+.g-opt input:checked + label{border-color:var(--red);background:var(--red-light);color:var(--red)}
+/* PHONE */
+.phone-wrap{display:flex}
+.phone-prefix{padding:11px 14px;border:1.5px solid var(--border);border-right:none;border-radius:9px 0 0 9px;font-size:14px;font-weight:500;color:var(--ink-2);background:var(--cream);white-space:nowrap;display:flex;align-items:center;gap:6px}
+.phone-wrap input{border-radius:0 9px 9px 0;border-left:none}
+.phone-wrap:focus-within .phone-prefix,.phone-wrap:focus-within input{border-color:var(--red)}
+/* INFO NOTE */
+.info-note{background:var(--red-light);border:1px solid var(--red-soft);border-radius:9px;padding:10px 14px;font-size:12px;color:var(--red-deep);margin-bottom:18px;display:flex;gap:8px;align-items:flex-start;line-height:1.6}
+/* SUBMIT */
+.btn-submit{width:100%;background:var(--red);color:#fff;border:none;padding:15px;border-radius:10px;font-size:15px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;cursor:pointer;transition:background .2s;margin-top:28px}
+.btn-submit:hover{background:var(--red-deep)}
+.form-note{font-size:12px;color:var(--subtle);text-align:center;margin-top:12px;line-height:1.6}
+.form-note a{color:var(--red);text-decoration:none;font-weight:500}
+.already{text-align:center;margin-top:14px;font-size:13px;color:var(--muted)}
+.already a{color:var(--red);font-weight:600;text-decoration:none}
+@media(max-width:860px){
+  .page{grid-template-columns:1fr}
+  .left{padding:32px 18px;min-height:auto}
+  .left h2{font-size:28px}
+  .sp-steps{display:none}
+  .right{padding:28px 18px}
+  .field-row{grid-template-columns:1fr}
+  nav{padding:14px 18px}
+}
+</style>
+</head>
+<body>
+<nav>
+  <a class="logo" href="landing.html"><div class="logo-mark"></div><span class="logo-name">Blood Connector</span></a>
+  <a class="nav-back" href="donor-terms.html">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+    Back to terms
+  </a>
+</nav>
+
+<div class="page">
+  <!-- LEFT PANEL -->
+  <div class="left">
+    <div class="left-top">
+      <span class="left-tag">Donor registration</span>
+      <h2>Join Ghana's<br><em>life-saving</em><br>network.</h2>
+      <p>Your blood type, your location, your availability — all in one verified profile. Donation is always voluntary. Free forever.</p>
+    </div>
+    <div>
+      <div class="sp-label">Your progress</div>
+      <div class="sp-steps">
+        <div class="sp-step active">
+          <div class="sp-dot">1</div>
+          <div><div class="sp-title">Personal information</div><div class="sp-sub">Name, contact, blood type</div></div>
+        </div>
+        <div class="sp-step pending">
+          <div class="sp-dot">2</div>
+          <div><div class="sp-title">Ghana Card verification</div><div class="sp-sub">NIA identity check</div></div>
+        </div>
+        <div class="sp-step pending">
+          <div class="sp-dot">3</div>
+          <div><div class="sp-title">Liveness detection</div><div class="sp-sub">Real-time face capture</div></div>
+        </div>
+        <div class="sp-step pending">
+          <div class="sp-dot">4</div>
+          <div><div class="sp-title">Profile live</div><div class="sp-sub">You're on the network</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT FORM -->
+  <div class="right">
+    <div class="form-eyebrow">Step 1 of 3</div>
+    <div class="form-top">
+      <h1>Personal information</h1>
+      <p>Tell us about yourself. This information will appear on your donor profile, visible to registered hospitals on Blood Connector.</p>
+    </div>
+
+    <div class="fdiv-label">Basic details</div>
+
+    <div class="field-row">
+      <div>
+        <label>First name <span class="req">*</span></label>
+        <input type="text" placeholder="e.g. Kwame"/>
+      </div>
+      <div>
+        <label>Last name <span class="req">*</span></label>
+        <input type="text" placeholder="e.g. Mensah"/>
+      </div>
+    </div>
+
+    <div class="field-row">
+      <div>
+        <label>Date of birth <span class="req">*</span></label>
+        <input type="date" id="dob" onchange="checkAge(this)"/>
+        <div class="field-hint" id="age-hint">Donors must be at least 17 years old.</div>
+        <div class="age-error" id="age-error">You must be at least 17 years old to register as a donor.</div>
+      </div>
+      <div>
+        <label>Gender <span class="req">*</span></label>
+        <div class="gender-grid">
+          <div class="g-opt"><input type="radio" name="gender" id="gm"/><label for="gm">Male</label></div>
+          <div class="g-opt"><input type="radio" name="gender" id="gf"/><label for="gf">Female</label></div>
+          <div class="g-opt"><input type="radio" name="gender" id="go"/><label for="go">Other</label></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="field-group">
+      <label>Blood type <span class="req">*</span></label>
+      <div class="bt-grid">
+        <div class="bt-opt"><input type="radio" name="bt" id="ap"/><label for="ap">A+</label></div>
+        <div class="bt-opt"><input type="radio" name="bt" id="am"/><label for="am">A−</label></div>
+        <div class="bt-opt"><input type="radio" name="bt" id="bp"/><label for="bp">B+</label></div>
+        <div class="bt-opt"><input type="radio" name="bt" id="bm"/><label for="bm">B−</label></div>
+        <div class="bt-opt"><input type="radio" name="bt" id="abp"/><label for="abp">AB+</label></div>
+        <div class="bt-opt"><input type="radio" name="bt" id="abm"/><label for="abm">AB−</label></div>
+        <div class="bt-opt"><input type="radio" name="bt" id="op"/><label for="op">O+</label></div>
+        <div class="bt-opt"><input type="radio" name="bt" id="om"/><label for="om">O−</label></div>
+      </div>
+      <div class="field-hint">Not sure? Check your Ghana Health Service donor card or visit any laboratory.</div>
+    </div>
+
+    <div class="fdiv-label">Contact details</div>
+
+    <div class="field-group">
+      <label>Phone number <span class="req">*</span></label>
+      <div class="phone-wrap">
+        <div class="phone-prefix">🇬🇭 +233</div>
+        <input type="tel" placeholder="24 000 0000" style="border-radius:0 9px 9px 0"/>
+      </div>
+      <div class="field-hint">This number is shared with hospitals who contact you. We strongly advise using a business or secondary number.</div>
+    </div>
+
+    <div class="field-group">
+      <label>Email address</label>
+      <input type="email" placeholder="you@example.com"/>
+      <div class="field-hint">Optional — used for certificate delivery and important account notifications only.</div>
+    </div>
+
+    <div class="fdiv-label">Location</div>
+
+    <div class="info-note">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#B91C1C" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+      Your location is used to match you with nearby hospitals. Only your region and district are shown to hospitals — never your exact address.
+    </div>
+
+    <div class="field-row">
+      <div>
+        <label>Region <span class="req">*</span></label>
+        <select>
+          <option value="" disabled selected>Select region</option>
+          <option>Ashanti</option><option>Greater Accra</option>
+          <option>Western</option><option>Eastern</option>
+          <option>Central</option><option>Northern</option>
+          <option>Upper East</option><option>Upper West</option>
+          <option>Volta</option><option>Oti</option>
+          <option>Bono</option><option>Bono East</option>
+          <option>Ahafo</option><option>Savannah</option>
+          <option>North East</option><option>Western North</option>
+        </select>
+      </div>
+      <div>
+        <label>District / City <span class="req">*</span></label>
+        <input type="text" placeholder="e.g. Kumasi Metropolitan"/>
+      </div>
+    </div>
+
+    <div class="field-group">
+      <label>Neighbourhood / Area</label>
+      <input type="text" placeholder="e.g. Adum, Bantama, Asokwa"/>
+      <div class="field-hint">Helps hospitals find donors closest to them first.</div>
+    </div>
+
+    <button class="btn-submit" onclick="location.href='donor-signup-step2.html'">Continue to Ghana Card verification →</button>
+    <p class="form-note">Your data is protected under the <a href="#">Data Protection Act 2012 (Act 843)</a>.</p>
+    <p class="already">Already have an account? <a href="#">Sign in</a></p>
+  </div>
+</div>
+
+<script>
+(function(){
+  const dob=document.getElementById('dob');
+  const today=new Date();
+  const maxDate=new Date(today.getFullYear()-17,today.getMonth(),today.getDate());
+  dob.max=maxDate.toISOString().split('T')[0];
+})();
+function checkAge(input){
+  const err=document.getElementById('age-error');
+  const hint=document.getElementById('age-hint');
+  const val=new Date(input.value);
+  const min=new Date();min.setFullYear(min.getFullYear()-17);
+  if(val>min){err.style.display='block';hint.style.display='none';input.value=''}
+  else{err.style.display='none';hint.style.display='block'}
+}
+</script>
+<script src="bc-app.js"></script>
+</body>
+</html>

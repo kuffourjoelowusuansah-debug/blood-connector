@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Blood Connector — Hospital Registration</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,700;0,9..144,900;1,9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+:root{--red:#B91C1C;--red-deep:#7F1D1D;--red-light:#FEF2F2;--red-soft:#FECACA;--red-mid:#FCA5A5;--ink:#0F0A0A;--ink-2:#3D2929;--muted:#6B5B5B;--subtle:#A8938E;--border:#EFE4E4;--cream:#FDFAF9;--success:#15803D;--success-bg:#F0FDF4;--success-border:#BBF7D0;}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Plus Jakarta Sans',sans-serif;color:var(--ink);background:var(--cream);-webkit-font-smoothing:antialiased;min-height:100vh}
+nav{display:flex;align-items:center;justify-content:space-between;padding:14px 48px;border-bottom:1px solid var(--border);background:#fff}
+.logo{display:flex;align-items:center;gap:9px;text-decoration:none}
+.logo-mark{width:24px;height:24px;background:var(--red);border-radius:50% 50% 50% 4px;transform:rotate(-35deg)}
+.logo-name{font-family:'Fraunces',serif;font-size:17px;font-weight:700;color:var(--red)}
+.nav-back{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:500;color:var(--muted);cursor:pointer;background:none;border:none;font-family:'Plus Jakarta Sans',sans-serif;text-decoration:none}
+/* TWO-PANEL */
+.page{display:grid;grid-template-columns:1fr 460px;min-height:calc(100vh - 53px)}
+/* LEFT */
+.left{background:var(--red);padding:52px 44px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden}
+.left::before{content:'';position:absolute;bottom:-80px;right:-80px;width:360px;height:360px;background:rgba(255,255,255,.05);border-radius:50%}
+.left::after{content:'';position:absolute;top:-60px;left:-60px;width:240px;height:240px;background:rgba(255,255,255,.04);border-radius:50%}
+.left-top{position:relative;z-index:1}
+.left-tag{display:inline-block;background:rgba(255,255,255,.15);color:rgba(255,255,255,.9);font-size:11px;font-weight:600;padding:4px 12px;border-radius:100px;letter-spacing:0.8px;text-transform:uppercase;margin-bottom:26px}
+.left h2{font-family:'Fraunces',serif;font-size:40px;font-weight:700;color:#fff;line-height:1.1;letter-spacing:-1.2px;margin-bottom:12px}
+.left h2 em{font-style:italic;opacity:.8}
+.left p{font-size:14px;color:rgba(255,255,255,.7);line-height:1.7;max-width:300px}
+.req-list{position:relative;z-index:1}
+.req-label{font-size:11px;font-weight:600;color:rgba(255,255,255,.5);letter-spacing:0.8px;text-transform:uppercase;margin-bottom:14px}
+.req-item{display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.1)}
+.req-item:last-child{border-bottom:none}
+.req-icon{width:32px;height:32px;border-radius:8px;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.req-text{font-size:13px;color:rgba(255,255,255,.8);line-height:1.5}
+.req-sub{font-size:11px;color:rgba(255,255,255,.45);margin-top:2px}
+/* RIGHT */
+.right{background:#fff;padding:44px 40px;overflow-y:auto}
+.form-eyebrow{font-size:11px;font-weight:600;color:var(--red);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:7px}
+.form-eyebrow::before{content:'';width:14px;height:1.5px;background:var(--red);display:block}
+.form-top h1{font-family:'Fraunces',serif;font-size:28px;font-weight:700;letter-spacing:-0.7px;color:var(--ink);margin-bottom:7px}
+.form-top p{font-size:13px;color:var(--muted);line-height:1.65;margin-bottom:32px}
+/* FIELDS */
+.fdiv-label{font-size:12px;font-weight:600;color:var(--ink);margin:26px 0 16px;display:flex;align-items:center;gap:10px}
+.fdiv-label::after{content:'';flex:1;height:1px;background:var(--border)}
+.field-group{margin-bottom:18px}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px}
+label{display:block;font-size:12px;font-weight:600;color:var(--ink-2);margin-bottom:5px;letter-spacing:0.1px}
+label span.req{color:var(--red)}
+input[type=text],input[type=email],input[type=tel],input[type=url],select,textarea{width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:9px;font-size:14px;font-family:'Plus Jakarta Sans',sans-serif;color:var(--ink);background:#fff;outline:none;transition:border-color .2s;-webkit-appearance:none;appearance:none}
+input:focus,select:focus,textarea:focus{border-color:var(--red)}
+input::placeholder,textarea::placeholder{color:#C4B4B4;font-size:13px}
+textarea{resize:vertical;min-height:88px;line-height:1.6}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23A8938E' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px;cursor:pointer}
+.field-hint{font-size:11px;color:var(--subtle);margin-top:5px;line-height:1.5}
+/* PHONE */
+.phone-wrap{display:flex}
+.phone-prefix{padding:11px 14px;border:1.5px solid var(--border);border-right:none;border-radius:9px 0 0 9px;font-size:14px;font-weight:500;color:var(--ink-2);background:var(--cream);white-space:nowrap;display:flex;align-items:center;gap:6px}
+.phone-wrap input{border-radius:0 9px 9px 0;border-left:none}
+.phone-wrap:focus-within .phone-prefix,.phone-wrap:focus-within input{border-color:var(--red)}
+/* FILE UPLOAD */
+.upload-zone{border:2px dashed var(--border);border-radius:12px;padding:24px;text-align:center;cursor:pointer;transition:border-color .2s,background .2s;background:#fff;position:relative}
+.upload-zone:hover{border-color:var(--red-mid);background:var(--red-light)}
+.upload-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.upload-icon{width:40px;height:40px;background:var(--red-light);border-radius:10px;display:flex;align-items:center;justify-content:center;margin:0 auto 12px}
+.upload-zone h4{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:4px}
+.upload-zone p{font-size:12px;color:var(--subtle);line-height:1.5}
+.upload-zone .types{font-size:11px;color:var(--red);font-weight:500;margin-top:6px}
+.upload-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px}
+/* FACILITY TYPE */
+.ftype-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:6px}
+.ftype-opt{position:relative}
+.ftype-opt input{position:absolute;opacity:0;width:0;height:0}
+.ftype-opt label{display:flex;align-items:center;justify-content:center;text-align:center;padding:10px 6px;border:1.5px solid var(--border);border-radius:9px;font-size:12px;font-weight:500;color:var(--muted);cursor:pointer;transition:all .2s;line-height:1.3;min-height:52px;margin-bottom:0}
+.ftype-opt input:checked + label{border-color:var(--red);background:var(--red-light);color:var(--red)}
+/* PAYSTACK NOTE */
+.pay-note{background:var(--success-bg);border:1px solid var(--success-border);border-radius:10px;padding:14px 16px;display:flex;gap:10px;align-items:flex-start;margin-bottom:20px}
+.pay-note p{font-size:13px;color:var(--success);line-height:1.6}
+/* SUBMIT */
+.btn-submit{width:100%;background:var(--red);color:#fff;border:none;padding:15px;border-radius:10px;font-size:15px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;cursor:pointer;transition:background .2s;margin-top:28px}
+.btn-submit:hover{background:var(--red-deep)}
+.form-note{font-size:12px;color:var(--subtle);text-align:center;margin-top:12px;line-height:1.6}
+.form-note a{color:var(--red);text-decoration:none;font-weight:500}
+@media(max-width:900px){
+  .page{grid-template-columns:1fr}
+  .left{padding:32px 18px;min-height:auto}
+  .left h2{font-size:28px}
+  .right{padding:28px 18px}
+  .field-row{grid-template-columns:1fr}
+  .upload-grid{grid-template-columns:1fr}
+  .ftype-grid{grid-template-columns:repeat(2,1fr)}
+  nav{padding:14px 18px}
+}
+</style>
+</head>
+<body>
+<nav>
+  <a class="logo" href="landing.html"><div class="logo-mark"></div><span class="logo-name">Blood Connector</span></a>
+  <a class="nav-back" href="hospital-terms.html">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+    Back to terms
+  </a>
+</nav>
+
+<div class="page">
+  <!-- LEFT PANEL -->
+  <div class="left">
+    <div class="left-top">
+      <span class="left-tag">Facility registration</span>
+      <h2>Register your<br><em>medical facility</em></h2>
+      <p>Provide your facility details and upload required documentation for verification. Your account will be reviewed before activation.</p>
+    </div>
+    <div class="req-list">
+      <div class="req-label">Documents required</div>
+      <div class="req-item">
+        <div class="req-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.9)" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+        <div><div class="req-text">HeFRA operating licence</div><div class="req-sub">Current and valid</div></div>
+      </div>
+      <div class="req-item">
+        <div class="req-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.9)" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+        <div><div class="req-text">Ghana Health Service registration</div><div class="req-sub">Or private practice licence</div></div>
+      </div>
+      <div class="req-item">
+        <div class="req-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.9)" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6M9 12h6M9 15h4"/></svg></div>
+        <div><div class="req-text">Facility photos</div><div class="req-sub">Exterior + reception area</div></div>
+      </div>
+      <div class="req-item">
+        <div class="req-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.9)" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+        <div><div class="req-text">Contact person's ID</div><div class="req-sub">Ghana Card of authorised rep</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT FORM -->
+  <div class="right">
+    <div class="form-eyebrow">Hospital registration</div>
+    <div class="form-top">
+      <h1>Facility information</h1>
+      <p>All fields marked with an asterisk are required. Your account will be reviewed by Blood Connector administration before activation.</p>
+    </div>
+
+    <!-- FACILITY BASICS -->
+    <div class="fdiv-label">Facility details</div>
+
+    <div class="field-group">
+      <label>Facility name <span class="req">*</span></label>
+      <input type="text" placeholder="e.g. Komfo Anokye Teaching Hospital"/>
+    </div>
+
+    <div class="field-group">
+      <label>Facility type <span class="req">*</span></label>
+      <div class="ftype-grid">
+        <div class="ftype-opt"><input type="radio" name="ftype" id="ft1"/><label for="ft1">Teaching hospital</label></div>
+        <div class="ftype-opt"><input type="radio" name="ftype" id="ft2"/><label for="ft2">District hospital</label></div>
+        <div class="ftype-opt"><input type="radio" name="ftype" id="ft3"/><label for="ft3">Private clinic</label></div>
+        <div class="ftype-opt"><input type="radio" name="ftype" id="ft4"/><label for="ft4">Polyclinic</label></div>
+        <div class="ftype-opt"><input type="radio" name="ftype" id="ft5"/><label for="ft5">Health centre</label></div>
+        <div class="ftype-opt"><input type="radio" name="ftype" id="ft6"/><label for="ft6">Other</label></div>
+      </div>
+    </div>
+
+    <div class="field-group">
+      <label>HeFRA licence number <span class="req">*</span></label>
+      <input type="text" placeholder="e.g. HeFRA/2023/00123"/>
+      <div class="field-hint">This will be verified. Ensure it matches the document you upload below.</div>
+    </div>
+
+    <div class="field-group">
+      <label>Ghana Health Service registration number</label>
+      <input type="text" placeholder="e.g. GHS/FAC/00456"/>
+    </div>
+
+    <!-- LOCATION -->
+    <div class="fdiv-label">Location</div>
+
+    <div class="field-row">
+      <div>
+        <label>Region <span class="req">*</span></label>
+        <select>
+          <option value="" disabled selected>Select region</option>
+          <option>Ashanti</option><option>Greater Accra</option>
+          <option>Western</option><option>Eastern</option>
+          <option>Central</option><option>Northern</option>
+          <option>Upper East</option><option>Upper West</option>
+          <option>Volta</option><option>Oti</option>
+          <option>Bono</option><option>Bono East</option>
+          <option>Ahafo</option><option>Savannah</option>
+          <option>North East</option><option>Western North</option>
+        </select>
+      </div>
+      <div>
+        <label>District / City <span class="req">*</span></label>
+        <input type="text" placeholder="e.g. Kumasi Metropolitan"/>
+      </div>
+    </div>
+
+    <div class="field-group">
+      <label>Physical address <span class="req">*</span></label>
+      <input type="text" placeholder="Street, area, landmark"/>
+    </div>
+
+    <div class="field-group">
+      <label>Digital Address (Ghana Post GPS)</label>
+      <input type="text" placeholder="e.g. AK-039-1234"/>
+    </div>
+
+    <!-- CONTACT -->
+    <div class="fdiv-label">Contact details</div>
+
+    <div class="field-row">
+      <div>
+        <label>Contact person (full name) <span class="req">*</span></label>
+        <input type="text" placeholder="Name of doctor or administrator"/>
+      </div>
+      <div>
+        <label>Job title / role <span class="req">*</span></label>
+        <input type="text" placeholder="e.g. Medical Director, Nurse"/>
+      </div>
+    </div>
+
+    <div class="field-group">
+      <label>Facility phone number <span class="req">*</span></label>
+      <div class="phone-wrap">
+        <div class="phone-prefix">🇬🇭 +233</div>
+        <input type="tel" placeholder="30 000 0000" style="border-radius:0 9px 9px 0"/>
+      </div>
+    </div>
+
+    <div class="field-group">
+      <label>Email address <span class="req">*</span></label>
+      <input type="email" placeholder="facility@example.com"/>
+      <div class="field-hint">Used for account notifications and subscription receipts.</div>
+    </div>
+
+    <div class="field-group">
+      <label>Website (optional)</label>
+      <input type="url" placeholder="https://"/>
+    </div>
+
+    <div class="field-group">
+      <label>Brief description of facility</label>
+      <textarea placeholder="Briefly describe your facility — specialisations, capacity, services offered..."></textarea>
+    </div>
+
+    <!-- DONOR PRIVILEGES -->
+    <div class="fdiv-label">Donor privileges (optional)</div>
+    <div class="field-group">
+      <label>Privileges offered to Blood Connector donors</label>
+      <textarea placeholder="e.g. Free annual blood screening, 20% discount on lab tests, priority outpatient consultations..."></textarea>
+      <div class="field-hint">These are displayed publicly on your facility profile to encourage donor participation. Must be non-financial and health-related.</div>
+    </div>
+
+    <!-- DOCUMENT UPLOADS -->
+    <div class="fdiv-label">Document uploads</div>
+
+    <div class="upload-grid">
+      <div>
+        <label>HeFRA operating licence <span class="req">*</span></label>
+        <div class="upload-zone">
+          <input type="file" accept=".pdf,.jpg,.jpeg,.png"/>
+          <div class="upload-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#B91C1C" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></div>
+          <h4>Upload licence</h4>
+          <p>Drag &amp; drop or click to browse</p>
+          <div class="types">PDF, JPG, PNG — max 5MB</div>
+        </div>
+      </div>
+      <div>
+        <label>GHS registration certificate <span class="req">*</span></label>
+        <div class="upload-zone">
+          <input type="file" accept=".pdf,.jpg,.jpeg,.png"/>
+          <div class="upload-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#B91C1C" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></div>
+          <h4>Upload certificate</h4>
+          <p>Drag &amp; drop or click to browse</p>
+          <div class="types">PDF, JPG, PNG — max 5MB</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="upload-grid">
+      <div>
+        <label>Facility photo — exterior <span class="req">*</span></label>
+        <div class="upload-zone">
+          <input type="file" accept=".jpg,.jpeg,.png"/>
+          <div class="upload-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#B91C1C" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>
+          <h4>Exterior photo</h4>
+          <p>Clear photo of the building entrance</p>
+          <div class="types">JPG, PNG — max 5MB</div>
+        </div>
+      </div>
+      <div>
+        <label>Facility photo — reception / ward <span class="req">*</span></label>
+        <div class="upload-zone">
+          <input type="file" accept=".jpg,.jpeg,.png"/>
+          <div class="upload-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#B91C1C" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>
+          <h4>Interior photo</h4>
+          <p>Reception area or ward</p>
+          <div class="types">JPG, PNG — max 5MB</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="field-group">
+      <label>Contact person's Ghana Card (authorised rep) <span class="req">*</span></label>
+      <div class="upload-zone">
+        <input type="file" accept=".jpg,.jpeg,.png,.pdf"/>
+        <div class="upload-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#B91C1C" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></div>
+        <h4>Upload Ghana Card of authorised representative</h4>
+        <p>Front of card clearly visible</p>
+        <div class="types">JPG, PNG, PDF — max 5MB</div>
+      </div>
+    </div>
+
+    <div class="field-group">
+      <label>Additional accreditation or supporting documents (optional)</label>
+      <div class="upload-zone">
+        <input type="file" accept=".pdf,.jpg,.jpeg,.png" multiple/>
+        <div class="upload-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#B91C1C" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg></div>
+        <h4>Upload additional documents</h4>
+        <p>Any other licences, certificates, or supporting documents</p>
+        <div class="types">PDF, JPG, PNG — multiple files accepted</div>
+      </div>
+    </div>
+
+    <!-- PAYMENT NOTE -->
+    <div class="fdiv-label">Subscription &amp; payment</div>
+
+    <div class="pay-note">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#15803D" stroke-width="2" style="flex-shrink:0;margin-top:2px"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      <p>Your subscription of <strong>GHS 300/month</strong> will be processed via Paystack after your account is verified and approved by Blood Connector administration. You will receive an email with payment instructions once your facility is approved.</p>
+    </div>
+
+    <button class="btn-submit">Submit for verification</button>
+    <p class="form-note">By submitting you confirm all information and documents are accurate and genuine.<br>False information may result in legal action. <a href="hospital-terms.html">Review terms</a></p>
+  </div>
+</div>
+<script src="bc-app.js"></script>
+</body>
+</html>

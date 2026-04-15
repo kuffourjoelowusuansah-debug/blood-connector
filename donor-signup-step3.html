@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Blood Connector — Liveness Detection</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,700;0,9..144,900;1,9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+:root{--red:#B91C1C;--red-deep:#7F1D1D;--red-light:#FEF2F2;--red-soft:#FECACA;--red-mid:#FCA5A5;--ink:#0F0A0A;--ink-2:#3D2929;--muted:#6B5B5B;--subtle:#A8938E;--border:#EFE4E4;--cream:#FDFAF9;--success:#15803D;--success-bg:#F0FDF4;--success-border:#BBF7D0;}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Plus Jakarta Sans',sans-serif;color:var(--ink);background:var(--cream);-webkit-font-smoothing:antialiased;min-height:100vh}
+nav{display:flex;align-items:center;justify-content:space-between;padding:14px 48px;border-bottom:1px solid var(--border);background:#fff}
+.logo{display:flex;align-items:center;gap:9px;text-decoration:none}
+.logo-mark{width:24px;height:24px;background:var(--red);border-radius:50% 50% 50% 4px;transform:rotate(-35deg)}
+.logo-name{font-family:'Fraunces',serif;font-size:17px;font-weight:700;color:var(--red)}
+.nav-back{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:500;color:var(--muted);cursor:pointer;background:none;border:none;font-family:'Plus Jakarta Sans',sans-serif;text-decoration:none}
+.page{display:grid;grid-template-columns:1fr 480px;min-height:calc(100vh - 53px)}
+/* LEFT */
+.left{background:var(--red);padding:52px 44px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden}
+.left::before{content:'';position:absolute;bottom:-80px;right:-80px;width:360px;height:360px;background:rgba(255,255,255,.05);border-radius:50%}
+.left-top{position:relative;z-index:1}
+.left-tag{display:inline-block;background:rgba(255,255,255,.15);color:rgba(255,255,255,.9);font-size:11px;font-weight:600;padding:4px 12px;border-radius:100px;letter-spacing:0.8px;text-transform:uppercase;margin-bottom:26px}
+.left h2{font-family:'Fraunces',serif;font-size:38px;font-weight:700;color:#fff;line-height:1.1;letter-spacing:-1.2px;margin-bottom:12px}
+.left h2 em{font-style:italic;opacity:.8}
+.left p{font-size:14px;color:rgba(255,255,255,.7);line-height:1.7;max-width:300px}
+.sp-steps{display:flex;flex-direction:column;position:relative;z-index:1;margin-top:0}
+.sp-label{font-size:11px;font-weight:600;color:rgba(255,255,255,.5);letter-spacing:0.8px;text-transform:uppercase;margin-bottom:14px}
+.sp-step{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.1)}
+.sp-step:last-child{border-bottom:none}
+.sp-dot{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:10px;font-weight:700}
+.sp-step.done .sp-dot{background:rgba(255,255,255,.3);color:#fff}
+.sp-step.active .sp-dot{background:#fff;color:var(--red)}
+.sp-step.pending .sp-dot{background:rgba(255,255,255,.1);color:rgba(255,255,255,.35)}
+.sp-title{font-size:13px;font-weight:600;color:#fff}
+.sp-step.pending .sp-title{color:rgba(255,255,255,.4)}
+.sp-step.done .sp-title{color:rgba(255,255,255,.7)}
+.sp-sub{font-size:11px;color:rgba(255,255,255,.45);margin-top:2px}
+.sp-step.active .sp-sub{color:rgba(255,255,255,.65)}
+/* WHY BOX */
+.why-box{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:12px;padding:18px;margin-top:28px;position:relative;z-index:1}
+.why-box h4{font-size:13px;font-weight:600;color:#fff;margin-bottom:10px}
+.why-item{display:flex;align-items:flex-start;gap:9px;margin-bottom:9px}
+.why-item:last-child{margin-bottom:0}
+.why-dot{width:5px;height:5px;background:var(--red-mid);border-radius:50%;flex-shrink:0;margin-top:7px}
+.why-item p{font-size:12px;color:rgba(255,255,255,.65);line-height:1.6}
+/* RIGHT */
+.right{background:#fff;padding:44px 40px;overflow-y:auto;display:flex;flex-direction:column}
+.form-eyebrow{font-size:11px;font-weight:600;color:var(--red);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:7px}
+.form-eyebrow::before{content:'';width:14px;height:1.5px;background:var(--red);display:block}
+.form-top h1{font-family:'Fraunces',serif;font-size:28px;font-weight:700;letter-spacing:-0.7px;color:var(--ink);margin-bottom:7px}
+.form-top p{font-size:13px;color:var(--muted);line-height:1.65;margin-bottom:28px}
+/* CAMERA AREA */
+.camera-wrap{background:#0F0A0A;border-radius:16px;overflow:hidden;position:relative;aspect-ratio:4/3;margin-bottom:20px;display:flex;align-items:center;justify-content:center}
+#videoEl{width:100%;height:100%;object-fit:cover;display:none;transform:scaleX(-1)}
+.camera-placeholder{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:32px}
+.cam-icon{width:64px;height:64px;border-radius:50%;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center}
+.camera-placeholder h3{font-family:'Fraunces',serif;font-size:20px;color:#fff;font-weight:700;text-align:center}
+.camera-placeholder p{font-size:13px;color:rgba(255,255,255,.5);text-align:center;line-height:1.6;max-width:260px}
+/* FACE OVERLAY */
+.face-overlay{position:absolute;inset:0;display:none;align-items:center;justify-content:center;pointer-events:none}
+.face-ring{width:180px;height:220px;border:3px solid var(--red);border-radius:50%;position:relative;animation:scan 2s ease-in-out infinite}
+.face-ring::before{content:'';position:absolute;top:-3px;left:-3px;right:-3px;bottom:-3px;border:1px solid rgba(185,28,28,.3);border-radius:50%}
+@keyframes scan{0%,100%{border-color:var(--red)}50%{border-color:var(--red-mid)}}
+.scan-line{position:absolute;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--red),transparent);animation:scanline 2s linear infinite;top:0}
+@keyframes scanline{0%{top:0}100%{top:100%}}
+/* INSTRUCTION CARDS */
+.instr-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px}
+.instr-card{background:var(--cream);border:1px solid var(--border);border-radius:10px;padding:14px 10px;text-align:center}
+.instr-card.active-step{background:var(--red-light);border-color:var(--red-soft)}
+.instr-num{width:26px;height:26px;border-radius:50%;background:var(--border);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--muted);margin:0 auto 8px}
+.instr-card.active-step .instr-num{background:var(--red);color:#fff}
+.instr-card h4{font-size:12px;font-weight:600;color:var(--ink);margin-bottom:3px}
+.instr-card p{font-size:11px;color:var(--muted);line-height:1.4}
+/* STATUS DISPLAY */
+.status-bar{background:var(--cream);border:1px solid var(--border);border-radius:10px;padding:12px 16px;display:flex;align-items:center;gap:10px;margin-bottom:20px}
+.status-dot{width:8px;height:8px;border-radius:50%;background:var(--subtle);flex-shrink:0}
+.status-dot.active{background:var(--red);animation:blink 1s infinite}
+.status-dot.success{background:var(--success)}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.status-text{font-size:13px;color:var(--muted);font-weight:500}
+/* BUTTONS */
+.btn-camera{width:100%;background:var(--red);color:#fff;border:none;padding:15px;border-radius:10px;font-size:15px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:10px}
+.btn-camera:hover{background:var(--red-deep)}
+.btn-camera:disabled{background:var(--border);color:var(--subtle);cursor:not-allowed}
+.btn-proceed{width:100%;background:var(--ink);color:#fff;border:none;padding:14px;border-radius:10px;font-size:14px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;cursor:pointer;display:none}
+.btn-proceed.show{display:block}
+.btn-secondary{width:100%;background:transparent;color:var(--muted);border:1px solid var(--border);padding:12px;border-radius:10px;font-size:13px;font-family:'Plus Jakarta Sans',sans-serif;cursor:pointer;margin-top:8px}
+.notice{background:var(--red-light);border:1px solid var(--red-soft);border-radius:9px;padding:12px 14px;display:flex;gap:9px;margin-bottom:20px}
+.notice p{font-size:12px;color:var(--red-deep);line-height:1.6}
+.success-box{background:var(--success-bg);border:1px solid var(--success-border);border-radius:10px;padding:14px 16px;display:flex;gap:10px;align-items:center;margin-bottom:16px;display:none}
+.success-box p{font-size:13px;color:var(--success);font-weight:500}
+@media(max-width:860px){
+  .page{grid-template-columns:1fr}
+  .left{padding:28px 18px;min-height:auto}
+  .left h2{font-size:26px}
+  .sp-steps,.why-box{display:none}
+  .right{padding:28px 18px}
+  .instr-grid{grid-template-columns:1fr 1fr}
+  nav{padding:14px 18px}
+}
+</style>
+</head>
+<body>
+<nav>
+  <a class="logo" href="landing.html"><div class="logo-mark"></div><span class="logo-name">Blood Connector</span></a>
+  <a class="nav-back" href="donor-signup-step2.html">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+    Back to step 2
+  </a>
+</nav>
+
+<div class="page">
+  <div class="left">
+    <div class="left-top">
+      <span class="left-tag">Liveness detection</span>
+      <h2>Prove you're<br><em>really you</em></h2>
+      <p>A real-time face check confirms you are a live person and matches your face against your Ghana Card photo.</p>
+    </div>
+    <div>
+      <div class="sp-label">Your progress</div>
+      <div class="sp-steps">
+        <div class="sp-step done"><div class="sp-dot">✓</div><div><div class="sp-title">Personal information</div><div class="sp-sub">Completed</div></div></div>
+        <div class="sp-step done"><div class="sp-dot">✓</div><div><div class="sp-title">Ghana Card verification</div><div class="sp-sub">Completed</div></div></div>
+        <div class="sp-step active"><div class="sp-dot">3</div><div><div class="sp-title">Liveness detection</div><div class="sp-sub">Real-time face capture</div></div></div>
+        <div class="sp-step pending"><div class="sp-dot">4</div><div><div class="sp-title">Profile live</div><div class="sp-sub">You're on the network</div></div></div>
+      </div>
+      <div class="why-box">
+        <h4>Why we do this</h4>
+        <div class="why-item"><div class="why-dot"></div><p>Prevents identity fraud and fake donor profiles</p></div>
+        <div class="why-item"><div class="why-dot"></div><p>Confirms the person registering is physically present</p></div>
+        <div class="why-item"><div class="why-dot"></div><p>Matches your face to your Ghana Card photo in real time</p></div>
+        <div class="why-item"><div class="why-dot"></div><p>Powered by FaceIO — no footage is stored after verification</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="right">
+    <div class="form-eyebrow">Step 3 of 3</div>
+    <div class="form-top">
+      <h1>Liveness detection</h1>
+      <p>Allow camera access, position your face in the frame, and follow the on-screen prompts. This takes about 30 seconds. Make sure you are in a well-lit space.</p>
+    </div>
+
+    <div class="notice">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#B91C1C" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+      <p>Camera access is required for liveness detection. No video is recorded or stored — only a single verified frame is used to confirm your identity.</p>
+    </div>
+
+    <div class="camera-wrap" id="cameraWrap">
+      <video id="videoEl" autoplay playsinline></video>
+      <div class="face-overlay" id="faceOverlay">
+        <div class="face-ring"><div class="scan-line"></div></div>
+      </div>
+      <div class="camera-placeholder" id="camPlaceholder">
+        <div class="cam-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.6)" stroke-width="1.5"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+        </div>
+        <h3>Camera not started</h3>
+        <p>Click the button below to start your camera and begin face verification.</p>
+      </div>
+    </div>
+
+    <div class="instr-grid">
+      <div class="instr-card active-step" id="s1">
+        <div class="instr-num">1</div>
+        <h4>Face forward</h4>
+        <p>Look directly at the camera, centred in the oval</p>
+      </div>
+      <div class="instr-card" id="s2">
+        <div class="instr-num">2</div>
+        <h4>Blink twice</h4>
+        <p>Blink naturally when prompted to confirm liveness</p>
+      </div>
+      <div class="instr-card" id="s3">
+        <div class="instr-num">3</div>
+        <h4>Turn slightly</h4>
+        <p>Slowly turn your head left then right when asked</p>
+      </div>
+    </div>
+
+    <div class="status-bar">
+      <div class="status-dot" id="statusDot"></div>
+      <span class="status-text" id="statusText">Camera not started — click Start below</span>
+    </div>
+
+    <div class="success-box" id="successBox">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#15803D" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      <p>Liveness check passed — your identity has been verified successfully.</p>
+    </div>
+
+    <button class="btn-camera" id="startBtn" onclick="startCamera()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+      Start camera &amp; begin verification
+    </button>
+
+    <button class="btn-proceed" id="proceedBtn" onclick="location.href='donor-success.html'">
+      Complete registration →
+    </button>
+
+    <button class="btn-secondary" id="retryBtn" style="display:none" onclick="retryCamera()">Try again</button>
+
+    <canvas id="snapCanvas" style="display:none"></canvas>
+  </div>
+</div>
+
+<script>
+let stream=null;let step=0;let timer=null;
+const steps=[
+  'Camera active — position your face in the oval frame',
+  'Good — now blink twice naturally',
+  'Perfect — slowly turn your head left, then right',
+  'Checking against Ghana Card photo...',
+  'Verified!'
+];
+const cards=['s1','s2','s3'];
+
+function startCamera(){
+  const btn=document.getElementById('startBtn');
+  btn.disabled=true;btn.textContent='Starting camera...';
+  navigator.mediaDevices.getUserMedia({video:{facingMode:'user',width:{ideal:640},height:{ideal:480}}})
+  .then(s=>{
+    stream=s;
+    const vid=document.getElementById('videoEl');
+    vid.srcObject=s;vid.style.display='block';
+    document.getElementById('camPlaceholder').style.display='none';
+    document.getElementById('faceOverlay').style.display='flex';
+    const dot=document.getElementById('statusDot');
+    dot.classList.add('active');
+    setStatus(0);
+    btn.style.display='none';
+    simulateCheck();
+  })
+  .catch(()=>{
+    btn.disabled=false;btn.textContent='Start camera & begin verification';
+    document.getElementById('statusText').textContent='Camera access denied — please allow camera in browser settings';
+  });
+}
+
+function setStatus(i){
+  document.getElementById('statusText').textContent=steps[i];
+  cards.forEach((c,idx)=>{
+    document.getElementById(c).classList.toggle('active-step',idx===i&&i<3);
+  });
+}
+
+function simulateCheck(){
+  let i=0;
+  timer=setInterval(()=>{
+    i++;setStatus(i);
+    if(i>=4){
+      clearInterval(timer);
+      setTimeout(()=>{
+        setStatus(4);
+        document.getElementById('statusDot').classList.remove('active');
+        document.getElementById('statusDot').classList.add('success');
+        document.getElementById('successBox').style.display='flex';
+        document.getElementById('proceedBtn').classList.add('show');
+        if(stream)stream.getTracks().forEach(t=>t.stop());
+        document.getElementById('faceOverlay').style.display='none';
+      },800);
+    }
+  },2200);
+}
+
+function retryCamera(){
+  if(stream)stream.getTracks().forEach(t=>t.stop());
+  clearInterval(timer);step=0;
+  document.getElementById('videoEl').style.display='none';
+  document.getElementById('camPlaceholder').style.display='flex';
+  document.getElementById('faceOverlay').style.display='none';
+  document.getElementById('successBox').style.display='none';
+  document.getElementById('proceedBtn').classList.remove('show');
+  document.getElementById('startBtn').style.display='flex';
+  document.getElementById('startBtn').disabled=false;
+  document.getElementById('startBtn').innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>Start camera & begin verification';
+  document.getElementById('statusDot').className='status-dot';
+  setStatus(0);document.getElementById('statusText').textContent='Camera not started — click Start below';
+}
+</script>
+<script src="bc-app.js"></script>
+</body>
+</html>

@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Blood Connector — Donor Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,700;0,9..144,900;1,9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+:root{--red:#B91C1C;--red-deep:#7F1D1D;--red-light:#FEF2F2;--red-soft:#FECACA;--red-mid:#FCA5A5;--ink:#0F0A0A;--ink-2:#3D2929;--muted:#6B5B5B;--subtle:#A8938E;--border:#EFE4E4;--cream:#FDFAF9;--success:#15803D;--success-bg:#F0FDF4;--success-border:#BBF7D0;}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Plus Jakarta Sans',sans-serif;color:var(--ink);background:var(--cream);-webkit-font-smoothing:antialiased;min-height:100vh}
+/* TOPBAR */
+.topbar{background:#fff;border-bottom:1px solid var(--border);padding:0 32px;display:flex;align-items:center;justify-content:space-between;height:56px;position:sticky;top:0;z-index:100}
+.logo{display:flex;align-items:center;gap:9px;text-decoration:none}
+.logo-mark{width:22px;height:22px;background:var(--red);border-radius:50% 50% 50% 4px;transform:rotate(-35deg)}
+.logo-name{font-family:'Fraunces',serif;font-size:16px;font-weight:700;color:var(--red)}
+.topbar-center{font-size:13px;color:var(--muted);font-weight:500}
+.topbar-right{display:flex;align-items:center;gap:12px}
+.avatar-sm{width:32px;height:32px;border-radius:50%;background:var(--red-light);display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-size:13px;font-weight:700;color:var(--red)}
+.notif-btn{background:none;border:1px solid var(--border);border-radius:8px;width:34px;height:34px;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative}
+.notif-dot{width:7px;height:7px;background:var(--red);border-radius:50%;position:absolute;top:6px;right:6px;border:1.5px solid #fff}
+/* LAYOUT */
+.layout{display:grid;grid-template-columns:220px 1fr;min-height:calc(100vh - 56px)}
+/* SIDEBAR */
+.sidebar{background:#fff;border-right:1px solid var(--border);padding:24px 0}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 20px;font-size:13px;font-weight:500;color:var(--muted);cursor:pointer;border-left:3px solid transparent;transition:all .15s;text-decoration:none}
+.nav-item:hover{background:var(--cream);color:var(--ink)}
+.nav-item.active{color:var(--red);border-left-color:var(--red);background:var(--red-light);font-weight:600}
+.nav-item svg{flex-shrink:0;opacity:.7}
+.nav-item.active svg{opacity:1}
+.nav-section{font-size:10px;font-weight:700;color:var(--subtle);letter-spacing:1px;text-transform:uppercase;padding:16px 20px 6px}
+.sidebar-bottom{padding:16px 16px 0;border-top:1px solid var(--border);margin-top:16px}
+.btn-logout{width:100%;background:none;border:1px solid var(--border);color:var(--muted);padding:9px;border-radius:8px;font-size:13px;font-family:'Plus Jakarta Sans',sans-serif;cursor:pointer}
+/* MAIN */
+.main{padding:28px 32px;overflow-y:auto}
+/* HEADER */
+.page-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:28px}
+.page-header h1{font-family:'Fraunces',serif;font-size:26px;font-weight:700;letter-spacing:-0.6px;color:var(--ink);margin-bottom:4px}
+.page-header p{font-size:13px;color:var(--muted)}
+/* TOGGLE */
+.toggle-card{background:var(--cream);border:1px solid var(--border);border-radius:12px;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:16px;min-width:200px}
+.toggle-label{font-size:12px;font-weight:600;color:var(--muted);margin-bottom:3px}
+.toggle-status{font-size:14px;font-weight:600}
+.toggle-status.on{color:var(--success)}
+.toggle-status.off{color:var(--subtle)}
+.toggle-switch{width:44px;height:24px;background:var(--border);border-radius:100px;position:relative;cursor:pointer;transition:background .2s;flex-shrink:0}
+.toggle-switch.on{background:var(--success)}
+.toggle-knob{width:18px;height:18px;background:#fff;border-radius:50%;position:absolute;top:3px;left:3px;transition:left .2s;box-shadow:0 1px 4px rgba(0,0,0,.15)}
+.toggle-switch.on .toggle-knob{left:23px}
+/* STATS */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px}
+.stat-card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:18px 20px}
+.stat-label{font-size:11px;font-weight:600;color:var(--subtle);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px}
+.stat-value{font-family:'Fraunces',serif;font-size:28px;font-weight:700;color:var(--ink);letter-spacing:-0.8px;line-height:1}
+.stat-sub{font-size:11px;color:var(--muted);margin-top:5px}
+.stat-card.highlight{background:var(--red);border-color:var(--red)}
+.stat-card.highlight .stat-label{color:rgba(255,255,255,.6)}
+.stat-card.highlight .stat-value{color:#fff}
+.stat-card.highlight .stat-sub{color:rgba(255,255,255,.6)}
+/* CERTIFICATE PROGRESS */
+.cert-card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:22px 24px;margin-bottom:24px}
+.cert-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.cert-top h3{font-family:'Fraunces',serif;font-size:16px;font-weight:700;color:var(--ink);letter-spacing:-0.2px}
+.cert-badge{background:var(--red-light);color:var(--red);font-size:11px;font-weight:600;padding:3px 10px;border-radius:100px}
+.progress-bar{background:var(--cream);border-radius:100px;height:10px;overflow:hidden;margin-bottom:10px}
+.progress-fill{height:100%;background:var(--red);border-radius:100px;transition:width .6s ease}
+.progress-labels{display:flex;justify-content:space-between;font-size:12px;color:var(--muted)}
+.donation-dots{display:flex;gap:6px;margin-top:14px;flex-wrap:wrap}
+.d-dot{width:28px;height:28px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--muted)}
+.d-dot.done{background:var(--red);border-color:var(--red);color:#fff}
+.d-dot.next{border-color:var(--red-mid);background:var(--red-light);color:var(--red)}
+/* GRID */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px}
+/* HISTORY TABLE */
+.section-card{background:#fff;border:1px solid var(--border);border-radius:14px;overflow:hidden}
+.section-head{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--border)}
+.section-head h3{font-family:'Fraunces',serif;font-size:15px;font-weight:700;color:var(--ink);letter-spacing:-0.2px}
+.section-head a{font-size:12px;color:var(--red);text-decoration:none;font-weight:500}
+table{width:100%;border-collapse:collapse}
+th{font-size:11px;font-weight:600;color:var(--subtle);text-transform:uppercase;letter-spacing:0.4px;padding:10px 20px;text-align:left;background:var(--cream)}
+td{font-size:13px;color:var(--ink-2);padding:12px 20px;border-top:1px solid var(--border)}
+.status-pill{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:3px 10px;border-radius:100px}
+.status-pill.confirmed{background:var(--success-bg);color:var(--success)}
+.status-pill.pending{background:#FFFBEB;color:#92400E}
+.status-pill.flagged{background:var(--red-light);color:var(--red)}
+/* PROFILE CARD */
+.profile-section{background:#fff;border:1px solid var(--border);border-radius:14px;overflow:hidden}
+.profile-top{background:var(--red);padding:24px;text-align:center}
+.p-avatar{width:64px;height:64px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-size:26px;font-weight:700;color:#fff;margin:0 auto 12px}
+.p-name{font-family:'Fraunces',serif;font-size:20px;font-weight:700;color:#fff;margin-bottom:4px}
+.p-meta{font-size:13px;color:rgba(255,255,255,.7)}
+.p-badges{display:flex;gap:6px;justify-content:center;margin-top:10px;flex-wrap:wrap}
+.p-badge{font-size:10px;font-weight:600;padding:3px 9px;border-radius:100px;background:rgba(255,255,255,.15);color:rgba(255,255,255,.9)}
+.profile-body{padding:18px 20px}
+.p-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px}
+.p-row:last-child{border-bottom:none}
+.p-row .key{color:var(--muted);font-size:12px}
+.p-row .val{color:var(--ink-2);font-weight:500}
+.btn-edit{width:100%;background:var(--red-light);color:var(--red);border:1px solid var(--red-soft);padding:10px;border-radius:8px;font-size:13px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;cursor:pointer;margin-top:14px}
+/* PRIVILEGES CARD */
+.priv-card{padding:20px}
+.priv-item{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)}
+.priv-item:last-child{border-bottom:none}
+.priv-icon{width:36px;height:36px;border-radius:9px;background:var(--red-light);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.priv-hosp{font-size:13px;font-weight:600;color:var(--ink)}
+.priv-desc{font-size:12px;color:var(--muted);margin-top:2px;line-height:1.5}
+@media(max-width:900px){
+  .layout{grid-template-columns:1fr}
+  .sidebar{display:none}
+  .stats{grid-template-columns:1fr 1fr}
+  .grid2{grid-template-columns:1fr}
+  .main{padding:18px}
+}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <a class="logo" href="landing.html"><div class="logo-mark"></div><span class="logo-name">Blood Connector</span></a>
+  <span class="topbar-center">Donor Dashboard</span>
+  <div class="topbar-right">
+    <button class="notif-btn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg><div class="notif-dot"></div></button>
+    <div class="avatar-sm">KM</div>
+  </div>
+</div>
+
+<div class="layout">
+  <aside class="sidebar">
+    <div class="nav-section">Main</div>
+    <a class="nav-item active" href="#">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      Dashboard
+    </a>
+    <a class="nav-item" href="#">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+      My profile
+    </a>
+    <a class="nav-item" href="#">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C8 2 5 5.5 5 9c0 5.5 7 13 7 13s7-7.5 7-13c0-3.5-3-7-7-7z"/></svg>
+      Donation history
+    </a>
+    <div class="nav-section">Recognition</div>
+    <a class="nav-item" href="#">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M9 12l2 2 4-4"/></svg>
+      My certificate
+    </a>
+    <a class="nav-item" href="#">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+      Hospital privileges
+    </a>
+    <div class="nav-section">Account</div>
+    <a class="nav-item" href="#">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      Settings
+    </a>
+    <div class="sidebar-bottom">
+      <button class="btn-logout">Sign out</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <!-- HEADER + TOGGLE -->
+    <div class="page-header">
+      <div>
+        <h1>Good morning, Kwame 👋</h1>
+        <p>Here's your Blood Connector donor summary</p>
+      </div>
+      <div class="toggle-card">
+        <div>
+          <div class="toggle-label">Availability status</div>
+          <div class="toggle-status on" id="toggleLabel">Active — visible to hospitals</div>
+        </div>
+        <div class="toggle-switch on" id="toggleSwitch" onclick="toggleStatus()">
+          <div class="toggle-knob"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats">
+      <div class="stat-card highlight">
+        <div class="stat-label">Total donations</div>
+        <div class="stat-value">7</div>
+        <div class="stat-sub">3 more to certificate</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Confirmed</div>
+        <div class="stat-value">7</div>
+        <div class="stat-sub">By hospital staff</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Requests received</div>
+        <div class="stat-value">11</div>
+        <div class="stat-sub">Since joining</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Blood type</div>
+        <div class="stat-value" style="font-size:22px">O+</div>
+        <div class="stat-sub">Universal donor</div>
+      </div>
+    </div>
+
+    <!-- CERTIFICATE PROGRESS -->
+    <div class="cert-card">
+      <div class="cert-top">
+        <h3>Certificate of honour progress</h3>
+        <span class="cert-badge">7 / 10 donations</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" style="width:70%"></div></div>
+      <div class="progress-labels"><span>0 donations</span><span>10 donations — certificate unlocked</span></div>
+      <div class="donation-dots">
+        <div class="d-dot done">1</div><div class="d-dot done">2</div><div class="d-dot done">3</div>
+        <div class="d-dot done">4</div><div class="d-dot done">5</div><div class="d-dot done">6</div>
+        <div class="d-dot done">7</div><div class="d-dot next">8</div>
+        <div class="d-dot">9</div><div class="d-dot">10</div>
+      </div>
+    </div>
+
+    <!-- GRID: HISTORY + PROFILE -->
+    <div class="grid2">
+      <!-- DONATION HISTORY -->
+      <div class="section-card">
+        <div class="section-head">
+          <h3>Recent donation history</h3>
+          <a href="#">View all</a>
+        </div>
+        <table>
+          <thead><tr><th>Date</th><th>Hospital</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>12 Mar 2025</td>
+              <td>KATH, Kumasi</td>
+              <td><span class="status-pill confirmed">✓ Confirmed</span></td>
+            </tr>
+            <tr>
+              <td>18 Jan 2025</td>
+              <td>Manhyia Hospital</td>
+              <td><span class="status-pill confirmed">✓ Confirmed</span></td>
+            </tr>
+            <tr>
+              <td>02 Nov 2024</td>
+              <td>Okomfo Anokye Clinic</td>
+              <td><span class="status-pill confirmed">✓ Confirmed</span></td>
+            </tr>
+            <tr>
+              <td>15 Aug 2024</td>
+              <td>Ridge Hospital, Accra</td>
+              <td><span class="status-pill pending">Pending</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- PROFILE SUMMARY -->
+      <div class="profile-section">
+        <div class="profile-top">
+          <div class="p-avatar">KM</div>
+          <div class="p-name">Kwame Mensah</div>
+          <div class="p-meta">Donor · Joined Jan 2024</div>
+          <div class="p-badges">
+            <span class="p-badge">✓ NIA Verified</span>
+            <span class="p-badge">✓ Face Checked</span>
+          </div>
+        </div>
+        <div class="profile-body">
+          <div class="p-row"><span class="key">Blood type</span><span class="val">O+</span></div>
+          <div class="p-row"><span class="key">Region</span><span class="val">Ashanti</span></div>
+          <div class="p-row"><span class="key">District</span><span class="val">Kumasi Metropolitan</span></div>
+          <div class="p-row"><span class="key">Phone</span><span class="val">+233 24 *** ****</span></div>
+          <div class="p-row"><span class="key">Status</span><span class="val" style="color:var(--success)">● Active</span></div>
+          <div class="p-row"><span class="key">Donations</span><span class="val">7 confirmed</span></div>
+        </div>
+        <div style="padding:0 20px 20px"><button class="btn-edit">Edit profile</button></div>
+      </div>
+    </div>
+
+    <!-- HOSPITAL PRIVILEGES -->
+    <div class="section-card" style="margin-bottom:24px">
+      <div class="section-head">
+        <h3>Hospital privileges available to you</h3>
+      </div>
+      <div class="priv-card">
+        <div class="priv-item">
+          <div class="priv-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#B91C1C" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></div>
+          <div>
+            <div class="priv-hosp">Komfo Anokye Teaching Hospital</div>
+            <div class="priv-desc">Free annual blood screening &amp; priority outpatient registration for verified Blood Connector donors.</div>
+          </div>
+        </div>
+        <div class="priv-item">
+          <div class="priv-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#B91C1C" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></div>
+          <div>
+            <div class="priv-hosp">Manhyia Government Hospital</div>
+            <div class="priv-desc">20% discount on laboratory tests for Blood Connector donors with confirmed donation history.</div>
+          </div>
+        </div>
+        <div class="priv-item">
+          <div class="priv-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#B91C1C" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></div>
+          <div>
+            <div class="priv-hosp">Okomfo Anokye Specialist Clinic</div>
+            <div class="priv-desc">Free malaria rapid test and consultation for donors who have given blood at the facility.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+let active=true;
+function toggleStatus(){
+  active=!active;
+  const sw=document.getElementById('toggleSwitch');
+  const lbl=document.getElementById('toggleLabel');
+  sw.classList.toggle('on',active);
+  lbl.textContent=active?'Active — visible to hospitals':'Inactive — hidden from hospitals';
+  lbl.style.color=active?'var(--success)':'var(--subtle)';
+}
+</script>
+<script src="bc-app.js"></script>
+</body>
+</html>

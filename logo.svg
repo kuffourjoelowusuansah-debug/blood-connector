@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300" width="300" height="300">
+  <!-- Blood drop -->
+  <path d="M150 30 C150 30 60 110 60 165 C60 220 100 255 150 255 C200 255 240 220 240 165 C240 110 150 30 150 30 Z" fill="#B91C1C"/>
+  <!-- ECG / heartbeat line clipped inside drop -->
+  <clipPath id="dc">
+    <path d="M150 30 C150 30 60 110 60 165 C60 220 100 255 150 255 C200 255 240 220 240 165 C240 110 150 30 150 30 Z"/>
+  </clipPath>
+  <polyline points="55,165 90,165 105,138 122,195 138,152 155,178 172,142 188,165 250,165" fill="none" stroke="#fff" stroke-width="11" stroke-linecap="round" stroke-linejoin="round" clip-path="url(#dc)"/>
+  <!-- Tail outside drop -->
+  <line x1="222" y1="165" x2="270" y2="165" stroke="#B91C1C" stroke-width="9" stroke-linecap="round" opacity="0.45"/>
+</svg>

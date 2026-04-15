@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Blood Connector — Patient Blood Request</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,700;0,9..144,900;1,9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+:root{--red:#B91C1C;--red-deep:#7F1D1D;--red-light:#FEF2F2;--red-soft:#FECACA;--red-mid:#FCA5A5;--ink:#0F0A0A;--ink-2:#3D2929;--muted:#6B5B5B;--subtle:#A8938E;--border:#EFE4E4;--cream:#FDFAF9;--warn:#92400E;--warn-bg:#FFFBEB;--warn-border:#FDE68A;}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Plus Jakarta Sans',sans-serif;color:var(--ink);background:var(--cream);-webkit-font-smoothing:antialiased}
+.topbar{background:#fff;border-bottom:1px solid var(--border);padding:0 32px;display:flex;align-items:center;justify-content:space-between;height:56px;position:sticky;top:0;z-index:100}
+.logo{display:flex;align-items:center;gap:9px;text-decoration:none}
+.logo-mark{width:22px;height:22px;background:var(--red);border-radius:50% 50% 50% 4px;transform:rotate(-35deg)}
+.logo-name{font-family:'Fraunces',serif;font-size:16px;font-weight:700;color:var(--red)}
+.topbar-right{display:flex;align-items:center;gap:12px}
+.hosp-tag{font-size:12px;font-weight:600;color:var(--muted);background:var(--cream);border:1px solid var(--border);padding:5px 12px;border-radius:100px}
+.back-btn{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:500;color:var(--muted);cursor:pointer;background:none;border:none;font-family:'Plus Jakarta Sans',sans-serif;text-decoration:none}
+/* LAYOUT */
+.wrap{max-width:900px;margin:0 auto;padding:36px 24px 64px}
+/* HEADER */
+.form-header{margin-bottom:32px}
+.form-badge{display:inline-flex;align-items:center;gap:7px;background:var(--red-light);border:1px solid var(--red-soft);color:var(--red);font-size:11px;font-weight:600;padding:4px 12px;border-radius:100px;letter-spacing:0.7px;text-transform:uppercase;margin-bottom:14px}
+.form-header h1{font-family:'Fraunces',serif;font-size:30px;font-weight:700;letter-spacing:-0.8px;color:var(--ink);margin-bottom:6px}
+.form-header p{font-size:14px;color:var(--muted);line-height:1.65}
+/* FORM CARD */
+.form-card{background:#fff;border:1px solid var(--border);border-radius:16px;padding:32px;margin-bottom:20px}
+.card-title{font-family:'Fraunces',serif;font-size:18px;font-weight:700;color:var(--ink);letter-spacing:-0.3px;margin-bottom:20px;display:flex;align-items:center;gap:10px}
+.card-title-icon{width:32px;height:32px;background:var(--red-light);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+/* FIELDS */
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:18px}
+.field-row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:18px}
+.field-group{margin-bottom:18px}
+label{display:block;font-size:12px;font-weight:600;color:var(--ink-2);margin-bottom:5px;letter-spacing:0.1px}
+label .req{color:var(--red)}
+input[type=text],input[type=number],input[type=date],input[type=time],select,textarea{width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:9px;font-size:14px;font-family:'Plus Jakarta Sans',sans-serif;color:var(--ink);background:#fff;outline:none;transition:border-color .2s;-webkit-appearance:none;appearance:none}
+input:focus,select:focus,textarea:focus{border-color:var(--red)}
+input::placeholder,textarea::placeholder{color:#C4B4B4;font-size:13px}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23A8938E' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px;cursor:pointer}
+textarea{resize:vertical;min-height:80px;line-height:1.6}
+.field-hint{font-size:11px;color:var(--subtle);margin-top:5px;line-height:1.5}
+/* RADIO PILL GROUPS */
+.pill-group{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.pill-opt{position:relative}
+.pill-opt input{position:absolute;opacity:0;width:0;height:0}
+.pill-opt label{display:flex;align-items:center;padding:8px 14px;border:1.5px solid var(--border);border-radius:9px;font-size:13px;font-weight:500;color:var(--muted);cursor:pointer;transition:all .2s;margin-bottom:0}
+.pill-opt input:checked + label{border-color:var(--red);background:var(--red-light);color:var(--red);font-weight:600}
+/* BLOOD TYPE GRID */
+.bt-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:6px}
+.bt-opt{position:relative}
+.bt-opt input{position:absolute;opacity:0;width:0;height:0}
+.bt-opt label{display:flex;align-items:center;justify-content:center;padding:11px 6px;border:1.5px solid var(--border);border-radius:9px;font-size:15px;font-weight:700;color:var(--muted);cursor:pointer;transition:all .2s;font-family:'Fraunces',serif;letter-spacing:-0.3px;margin-bottom:0}
+.bt-opt input:checked + label{border-color:var(--red);background:var(--red-light);color:var(--red)}
+/* URGENCY */
+.urg-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:6px}
+.urg-opt{position:relative}
+.urg-opt input{position:absolute;opacity:0;width:0;height:0}
+.urg-opt label{display:flex;flex-direction:column;padding:14px;border:1.5px solid var(--border);border-radius:10px;cursor:pointer;transition:all .2s;margin-bottom:0}
+.urg-opt input:checked + label{border-color:var(--red);background:var(--red-light)}
+.urg-dot{width:8px;height:8px;border-radius:50%;margin-bottom:8px}
+.urg-high .urg-dot{background:#DC2626}
+.urg-med .urg-dot{background:#D97706}
+.urg-low .urg-dot{background:var(--success)}
+.urg-title{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:3px}
+.urg-opt input:checked + label .urg-title{color:var(--red)}
+.urg-sub{font-size:11px;color:var(--muted);line-height:1.4}
+/* AUTO FIELDS */
+.auto-field{background:var(--cream);border:1px solid var(--border);border-radius:9px;padding:10px 14px;font-size:14px;color:var(--ink-2);font-weight:500}
+.auto-label{font-size:11px;color:var(--subtle);margin-bottom:3px}
+/* WARN */
+.warn-note{background:var(--warn-bg);border:1px solid var(--warn-border);border-radius:10px;padding:12px 14px;display:flex;gap:9px;margin-bottom:20px}
+.warn-note p{font-size:13px;color:var(--warn);line-height:1.6}
+/* SUBMIT */
+.submit-row{display:flex;gap:12px;margin-top:28px}
+.btn-submit{flex:1;background:var(--red);color:#fff;border:none;padding:15px;border-radius:10px;font-size:15px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;cursor:pointer}
+.btn-submit:hover{background:var(--red-deep)}
+.btn-cancel{background:transparent;color:var(--muted);border:1px solid var(--border);padding:15px 24px;border-radius:10px;font-size:14px;font-family:'Plus Jakarta Sans',sans-serif;cursor:pointer}
+@media(max-width:680px){
+  .wrap{padding:20px 14px 48px}
+  .form-card{padding:20px}
+  .field-row,.field-row3{grid-template-columns:1fr}
+  .bt-grid{grid-template-columns:repeat(4,1fr)}
+  .urg-grid{grid-template-columns:1fr}
+  .topbar{padding:0 16px}
+  .submit-row{flex-direction:column}
+}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <a class="logo" href="landing.html"><div class="logo-mark"></div><span class="logo-name">Blood Connector</span></a>
+  <div class="topbar-right">
+    <span class="hosp-tag">KATH, Kumasi</span>
+    <a class="back-btn" href="hospital-dashboard.html">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      Back
+    </a>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="form-header">
+    <div class="form-badge">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2C8 2 5 5.5 5 9c0 5.5 7 13 7 13s7-7.5 7-13c0-3.5-3-7-7-7z"/></svg>
+      New blood request
+    </div>
+    <h1>Patient Blood Request Form</h1>
+    <p>Complete all required fields to find matched donors. This form is aligned with Ghana National Blood Service standards.</p>
+  </div>
+
+  <!-- AUTO FIELDS -->
+  <div class="form-card">
+    <div class="card-title">
+      <div class="card-title-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#B91C1C" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M9 12h6M9 8h6M9 16h4"/></svg></div>
+      Request details (auto-filled)
+    </div>
+    <div class="field-row3">
+      <div><div class="auto-label">Patient log number</div><div class="auto-field">#BC-0048</div></div>
+      <div><div class="auto-label">Requesting hospital</div><div class="auto-field">KATH, Kumasi</div></div>
+      <div><div class="auto-label">Date &amp; time of request</div><div class="auto-field" id="autoDateTime">—</div></div>
+    </div>
+    <div class="field-row">
+      <div>
+        <label>Required by date <span class="req">*</span></label>
+        <input type="date" id="reqDate"/>
+      </div>
+      <div>
+        <label>Required by time <span class="req">*</span></label>
+        <input type="time" id="reqTime"/>
+      </div>
+    </div>
+    <div class="field-group">
+      <label>Clinician / requesting doctor <span class="req">*</span></label>
+      <input type="text" placeholder="Full name of requesting clinician"/>
+    </div>
+    <div class="field-group">
+      <label>Ward / unit</label>
+      <input type="text" placeholder="e.g. Surgical Ward B, ICU, A&amp;E"/>
+    </div>
+  </div>
+
+  <!-- PATIENT INFO -->
+  <div class="form-card">
+    <div class="card-title">
+      <div class="card-title-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#B91C1C" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></div>
+      Patient information
+    </div>
+    <div class="field-row">
+      <div>
+        <label>Surname <span class="req">*</span></label>
+        <input type="text" placeholder="Patient surname"/>
+      </div>
+      <div>
+        <label>First name <span class="req">*</span></label>
+        <input type="text" placeholder="Patient first name"/>
+      </div>
+    </div>
+    <div class="field-row3">
+      <div>
+        <label>Date of birth <span class="req">*</span></label>
+        <input type="date"/>
+      </div>
+      <div>
+        <label>Age</label>
+        <input type="number" placeholder="Years" min="0" max="120"/>
+      </div>
+      <div>
+        <label>Gender <span class="req">*</span></label>
+        <select>
+          <option value="" disabled selected>Select</option>
+          <option>Male</option><option>Female</option><option>Other</option>
+        </select>
+      </div>
+    </div>
+    <div class="field-row">
+      <div>
+        <label>NHIS number</label>
+        <input type="text" placeholder="Patient NHIS number"/>
+      </div>
+      <div>
+        <label>Patient contact / next of kin</label>
+        <input type="text" placeholder="+233 ..."/>
+      </div>
+    </div>
+    <!-- HISTORY FLAGS -->
+    <div class="field-row">
+      <div>
+        <label>Previous transfusions? <span class="req">*</span></label>
+        <div class="pill-group">
+          <div class="pill-opt"><input type="radio" name="prevTrans" id="pt_y"/><label for="pt_y">Yes</label></div>
+          <div class="pill-opt"><input type="radio" name="prevTrans" id="pt_n"/><label for="pt_n">No</label></div>
+          <div class="pill-opt"><input type="radio" name="prevTrans" id="pt_u"/><label for="pt_u">Unknown</label></div>
+        </div>
+      </div>
+      <div>
+        <label>Any transfusion reaction? <span class="req">*</span></label>
+        <div class="pill-group">
+          <div class="pill-opt"><input type="radio" name="reaction" id="r_y"/><label for="r_y">Yes</label></div>
+          <div class="pill-opt"><input type="radio" name="reaction" id="r_n"/><label for="r_n">No</label></div>
+          <div class="pill-opt"><input type="radio" name="reaction" id="r_u"/><label for="r_u">Unknown</label></div>
+        </div>
+      </div>
+    </div>
+    <div class="field-row">
+      <div>
+        <label>Previous pregnancies? (female patients)</label>
+        <div class="pill-group">
+          <div class="pill-opt"><input type="radio" name="preg" id="pg_y"/><label for="pg_y">Yes</label></div>
+          <div class="pill-opt"><input type="radio" name="preg" id="pg_n"/><label for="pg_n">No</label></div>
+          <div class="pill-opt"><input type="radio" name="preg" id="pg_na"/><label for="pg_na">N/A</label></div>
+        </div>
+      </div>
+      <div>
+        <label>Any prior transfusion run? <span class="req">*</span></label>
+        <div class="pill-group">
+          <div class="pill-opt"><input type="radio" name="priorRun" id="pr_y"/><label for="pr_y">Yes</label></div>
+          <div class="pill-opt"><input type="radio" name="priorRun" id="pr_n"/><label for="pr_n">No</label></div>
+        </div>
+      </div>
+    </div>
+    <div class="field-group">
+      <label>Clinical notes / diagnosis</label>
+      <textarea placeholder="Brief clinical context — condition, diagnosis, reason blood is needed..."></textarea>
+    </div>
+  </div>
+
+  <!-- BLOOD REQUEST -->
+  <div class="form-card">
+    <div class="card-title">
+      <div class="card-title-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#B91C1C" stroke-width="2"><path d="M12 2C8 2 5 5.5 5 9c0 5.5 7 13 7 13s7-7.5 7-13c0-3.5-3-7-7-7z"/></svg></div>
+      Blood requirements
+    </div>
+
+    <div class="field-group">
+      <label>Patient's blood group <span class="req">*</span></label>
+      <div class="bt-grid">
+        <div class="bt-opt"><input type="radio" name="bg" id="bg_ap"/><label for="bg_ap">A+</label></div>
+        <div class="bt-opt"><input type="radio" name="bg" id="bg_am"/><label for="bg_am">A−</label></div>
+        <div class="bt-opt"><input type="radio" name="bg" id="bg_bp"/><label for="bg_bp">B+</label></div>
+        <div class="bt-opt"><input type="radio" name="bg" id="bg_bm"/><label for="bg_bm">B−</label></div>
+        <div class="bt-opt"><input type="radio" name="bg" id="bg_abp"/><label for="bg_abp">AB+</label></div>
+        <div class="bt-opt"><input type="radio" name="bg" id="bg_abm"/><label for="bg_abm">AB−</label></div>
+        <div class="bt-opt"><input type="radio" name="bg" id="bg_op"/><label for="bg_op">O+</label></div>
+        <div class="bt-opt"><input type="radio" name="bg" id="bg_om"/><label for="bg_om">O−</label></div>
+      </div>
+      <div class="field-hint">The system will also show compatible donors if an exact match is unavailable, clearly labelled.</div>
+    </div>
+
+    <div class="field-row">
+      <div>
+        <label>Component type <span class="req">*</span></label>
+        <select>
+          <option value="" disabled selected>Select component</option>
+          <option>Whole Blood</option>
+          <option>Platelets</option>
+          <option>Plasma</option>
+          <option>Double Red Cells</option>
+          <option>Leukocytes Depleted</option>
+          <option>Other (specify in notes)</option>
+        </select>
+      </div>
+      <div>
+        <label>Number of units required <span class="req">*</span></label>
+        <input type="number" min="1" max="20" placeholder="e.g. 2"/>
+      </div>
+    </div>
+
+    <div class="field-group">
+      <label>Reason / indication for transfusion <span class="req">*</span></label>
+      <input type="text" placeholder="e.g. Severe anaemia, post-operative blood loss, trauma..."/>
+    </div>
+
+    <div class="field-group">
+      <label>Urgency level <span class="req">*</span></label>
+      <div class="urg-grid">
+        <div class="urg-opt urg-high">
+          <input type="radio" name="urgency" id="ug1"/>
+          <label for="ug1">
+            <div class="urg-dot"></div>
+            <div class="urg-title">Immediately</div>
+            <div class="urg-sub">Life-threatening — donor needed right now</div>
+          </label>
+        </div>
+        <div class="urg-opt urg-med">
+          <input type="radio" name="urgency" id="ug2"/>
+          <label for="ug2">
+            <div class="urg-dot"></div>
+            <div class="urg-title">Urgently — within 2 hours</div>
+            <div class="urg-sub">Patient condition is serious and deteriorating</div>
+          </label>
+        </div>
+        <div class="urg-opt urg-low">
+          <input type="radio" name="urgency" id="ug3"/>
+          <label for="ug3">
+            <div class="urg-dot"></div>
+            <div class="urg-title">Reserve — within 4 hours</div>
+            <div class="urg-sub">Planned procedure or non-critical need</div>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="warn-note">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#92400E" stroke-width="2" style="flex-shrink:0;margin-top:1px"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    <p>Reminder: Contacting a donor does not guarantee they will donate. Donation is always voluntary. Do not pressure, incentivise, or offer payment to any donor. Doing so violates Blood Connector's terms and Ghanaian law.</p>
+  </div>
+
+  <div class="submit-row">
+    <button class="btn-cancel" onclick="history.back()">Cancel</button>
+    <button class="btn-submit" onclick="location.href='donor-results.html'">Find matching donors →</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  const now=new Date();
+  document.getElementById('autoDateTime').textContent=
+    now.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'})+' · '+
+    now.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+})();
+</script>
+<script src="bc-app.js"></script>
+</body>
+</html>

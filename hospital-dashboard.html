@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Blood Connector — Hospital Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,700;0,9..144,900;1,9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+:root{--red:#B91C1C;--red-deep:#7F1D1D;--red-light:#FEF2F2;--red-soft:#FECACA;--red-mid:#FCA5A5;--ink:#0F0A0A;--ink-2:#3D2929;--muted:#6B5B5B;--subtle:#A8938E;--border:#EFE4E4;--cream:#FDFAF9;--success:#15803D;--success-bg:#F0FDF4;--success-border:#BBF7D0;--warn:#92400E;--warn-bg:#FFFBEB;--warn-border:#FDE68A;}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Plus Jakarta Sans',sans-serif;color:var(--ink);background:var(--cream);-webkit-font-smoothing:antialiased;min-height:100vh}
+.topbar{background:#fff;border-bottom:1px solid var(--border);padding:0 32px;display:flex;align-items:center;justify-content:space-between;height:56px;position:sticky;top:0;z-index:100}
+.logo{display:flex;align-items:center;gap:9px;text-decoration:none}
+.logo-mark{width:22px;height:22px;background:var(--red);border-radius:50% 50% 50% 4px;transform:rotate(-35deg)}
+.logo-name{font-family:'Fraunces',serif;font-size:16px;font-weight:700;color:var(--red)}
+.topbar-right{display:flex;align-items:center;gap:12px}
+.hosp-tag{font-size:12px;font-weight:600;color:var(--muted);background:var(--cream);border:1px solid var(--border);padding:5px 12px;border-radius:100px}
+.notif-btn{background:none;border:1px solid var(--border);border-radius:8px;width:34px;height:34px;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative}
+.notif-dot{width:7px;height:7px;background:var(--red);border-radius:50%;position:absolute;top:6px;right:6px;border:1.5px solid #fff}
+.layout{display:grid;grid-template-columns:220px 1fr;min-height:calc(100vh - 56px)}
+.sidebar{background:#fff;border-right:1px solid var(--border);padding:24px 0}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 20px;font-size:13px;font-weight:500;color:var(--muted);cursor:pointer;border-left:3px solid transparent;transition:all .15s;text-decoration:none}
+.nav-item:hover{background:var(--cream);color:var(--ink)}
+.nav-item.active{color:var(--red);border-left-color:var(--red);background:var(--red-light);font-weight:600}
+.nav-section{font-size:10px;font-weight:700;color:var(--subtle);letter-spacing:1px;text-transform:uppercase;padding:16px 20px 6px}
+.sidebar-bottom{padding:16px;border-top:1px solid var(--border);margin-top:16px}
+.btn-logout{width:100%;background:none;border:1px solid var(--border);color:var(--muted);padding:9px;border-radius:8px;font-size:13px;font-family:'Plus Jakarta Sans',sans-serif;cursor:pointer}
+.main{padding:28px 32px;overflow-y:auto}
+/* HEADER */
+.page-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:24px}
+.page-header h1{font-family:'Fraunces',serif;font-size:24px;font-weight:700;letter-spacing:-0.5px;margin-bottom:3px}
+.page-header p{font-size:13px;color:var(--muted)}
+.btn-new-request{background:var(--red);color:#fff;border:none;padding:11px 20px;border-radius:9px;font-size:14px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:8px}
+/* STATS */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px}
+.stat-card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:16px 18px}
+.stat-label{font-size:11px;font-weight:600;color:var(--subtle);text-transform:uppercase;letter-spacing:0.4px;margin-bottom:6px}
+.stat-value{font-family:'Fraunces',serif;font-size:26px;font-weight:700;color:var(--ink);letter-spacing:-0.8px;line-height:1}
+.stat-sub{font-size:11px;color:var(--muted);margin-top:4px}
+.stat-card.red{background:var(--red);border-color:var(--red)}
+.stat-card.red .stat-label,.stat-card.red .stat-sub{color:rgba(255,255,255,.6)}
+.stat-card.red .stat-value{color:#fff}
+/* SUBSCRIPTION STATUS */
+.sub-bar{background:#fff;border:1px solid var(--border);border-radius:12px;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;gap:16px}
+.sub-info{display:flex;align-items:center;gap:12px}
+.sub-icon{width:36px;height:36px;border-radius:9px;background:var(--success-bg);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sub-text h4{font-size:13px;font-weight:600;color:var(--ink)}
+.sub-text p{font-size:12px;color:var(--muted)}
+.sub-pill{background:var(--success-bg);color:var(--success);font-size:11px;font-weight:600;padding:4px 12px;border-radius:100px;border:1px solid var(--success-border)}
+/* GRID */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px}
+.section-card{background:#fff;border:1px solid var(--border);border-radius:14px;overflow:hidden}
+.section-head{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--border)}
+.section-head h3{font-family:'Fraunces',serif;font-size:15px;font-weight:700;letter-spacing:-0.2px}
+.section-head a{font-size:12px;color:var(--red);text-decoration:none;font-weight:500}
+table{width:100%;border-collapse:collapse}
+th{font-size:11px;font-weight:600;color:var(--subtle);text-transform:uppercase;letter-spacing:0.4px;padding:10px 20px;text-align:left;background:var(--cream)}
+td{font-size:13px;color:var(--ink-2);padding:11px 20px;border-top:1px solid var(--border)}
+.pill{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;padding:3px 9px;border-radius:100px}
+.pill.done{background:var(--success-bg);color:var(--success)}
+.pill.active{background:var(--warn-bg);color:var(--warn)}
+.pill.miss{background:var(--red-light);color:var(--red)}
+.urg-dot{width:7px;height:7px;border-radius:50%;display:inline-block;margin-right:4px}
+.urg-dot.high{background:#DC2626}
+.urg-dot.med{background:#D97706}
+.urg-dot.low{background:var(--success)}
+/* QUICK REQUEST CARD */
+.quick-card{background:var(--red);border-radius:14px;padding:28px;color:#fff;display:flex;flex-direction:column;justify-content:space-between;min-height:200px;position:relative;overflow:hidden}
+.quick-card::before{content:'';position:absolute;bottom:-40px;right:-40px;width:180px;height:180px;background:rgba(255,255,255,.06);border-radius:50%}
+.quick-card h3{font-family:'Fraunces',serif;font-size:22px;font-weight:700;margin-bottom:8px;position:relative;z-index:1}
+.quick-card p{font-size:13px;color:rgba(255,255,255,.7);line-height:1.6;position:relative;z-index:1}
+.btn-quick{background:#fff;color:var(--red);border:none;padding:12px 20px;border-radius:9px;font-size:14px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;cursor:pointer;margin-top:20px;align-self:flex-start;position:relative;z-index:1}
+/* RECENT DONORS CONTACTED */
+.donor-list{padding:0}
+.donor-row{display:flex;align-items:center;gap:12px;padding:12px 20px;border-top:1px solid var(--border)}
+.d-avatar{width:36px;height:36px;border-radius:50%;background:var(--red-light);display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-size:13px;font-weight:700;color:var(--red);flex-shrink:0}
+.d-info{flex:1}
+.d-name{font-size:13px;font-weight:600;color:var(--ink)}
+.d-meta{font-size:11px;color:var(--muted);margin-top:1px}
+.d-bt{font-family:'Fraunces',serif;font-size:15px;font-weight:700;color:var(--red)}
+@media(max-width:900px){
+  .layout{grid-template-columns:1fr}.sidebar{display:none}
+  .stats{grid-template-columns:1fr 1fr}.grid2{grid-template-columns:1fr}
+  .main{padding:18px}.page-header{flex-direction:column;gap:14px}
+}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <a class="logo" href="landing.html"><div class="logo-mark"></div><span class="logo-name">Blood Connector</span></a>
+  <div class="topbar-right">
+    <span class="hosp-tag">KATH, Kumasi</span>
+    <button class="notif-btn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg><div class="notif-dot"></div></button>
+  </div>
+</div>
+
+<div class="layout">
+  <aside class="sidebar">
+    <div class="nav-section">Main</div>
+    <a class="nav-item active" href="#"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Dashboard</a>
+    <a class="nav-item" href="patient-request.html"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>Patient blood request</a>
+    <a class="nav-item" href="#"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C8 2 5 5.5 5 9c0 5.5 7 13 7 13s7-7.5 7-13c0-3.5-3-7-7-7z"/></svg>Find donors</a>
+    <div class="nav-section">Records</div>
+    <a class="nav-item" href="#"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Request history</a>
+    <a class="nav-item" href="#"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>Donation records</a>
+    <div class="nav-section">Facility</div>
+    <a class="nav-item" href="#"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>Facility profile</a>
+    <a class="nav-item" href="#"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>Subscription</a>
+    <a class="nav-item" href="#"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Settings</a>
+    <div class="sidebar-bottom"><button class="btn-logout">Sign out</button></div>
+  </aside>
+
+  <main class="main">
+    <div class="page-header">
+      <div>
+        <h1>Hospital Dashboard</h1>
+        <p>Komfo Anokye Teaching Hospital · Kumasi, Ashanti</p>
+      </div>
+      <button class="btn-new-request" onclick="location.href='patient-request.html'">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+        New blood request
+      </button>
+    </div>
+
+    <!-- SUBSCRIPTION -->
+    <div class="sub-bar">
+      <div class="sub-info">
+        <div class="sub-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#15803D" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></div>
+        <div class="sub-text"><h4>Active subscription — GHS 300 / month</h4><p>Next billing: 15 May 2025 · Paystack auto-renew</p></div>
+      </div>
+      <span class="sub-pill">● Active</span>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats">
+      <div class="stat-card red">
+        <div class="stat-label">Active requests</div>
+        <div class="stat-value">3</div>
+        <div class="stat-sub">Open today</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Total requests</div>
+        <div class="stat-value">47</div>
+        <div class="stat-sub">Since joining</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Donations confirmed</div>
+        <div class="stat-value">39</div>
+        <div class="stat-sub">Success rate 83%</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Donors contacted</div>
+        <div class="stat-value">112</div>
+        <div class="stat-sub">Unique donors</div>
+      </div>
+    </div>
+
+    <div class="grid2">
+      <!-- QUICK ACTION -->
+      <div class="quick-card">
+        <div>
+          <h3>Need blood right now?</h3>
+          <p>Submit a patient request and instantly see all compatible active donors sorted by distance. Contact them directly on WhatsApp.</p>
+        </div>
+        <button class="btn-quick" onclick="location.href='patient-request.html'">Submit new request →</button>
+      </div>
+
+      <!-- RECENT DONORS -->
+      <div class="section-card">
+        <div class="section-head"><h3>Recently contacted donors</h3><a href="#">See all</a></div>
+        <div class="donor-list">
+          <div class="donor-row">
+            <div class="d-avatar">AK</div>
+            <div class="d-info"><div class="d-name">Akua Konadu</div><div class="d-meta">12 Mar 2025 · Confirmed ✓</div></div>
+            <div class="d-bt">O+</div>
+          </div>
+          <div class="donor-row">
+            <div class="d-avatar">KB</div>
+            <div class="d-info"><div class="d-name">Kofi Boateng</div><div class="d-meta">10 Mar 2025 · Declined</div></div>
+            <div class="d-bt">A+</div>
+          </div>
+          <div class="donor-row">
+            <div class="d-avatar">EA</div>
+            <div class="d-info"><div class="d-name">Esi Asante</div><div class="d-meta">28 Feb 2025 · Confirmed ✓</div></div>
+            <div class="d-bt">B+</div>
+          </div>
+          <div class="donor-row">
+            <div class="d-avatar">YD</div>
+            <div class="d-info"><div class="d-name">Yaw Darko</div><div class="d-meta">20 Feb 2025 · Confirmed ✓</div></div>
+            <div class="d-bt">AB+</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RECENT REQUESTS TABLE -->
+    <div class="section-card">
+      <div class="section-head"><h3>Recent blood requests</h3><a href="#">View all requests</a></div>
+      <table>
+        <thead><tr><th>Patient log</th><th>Blood type</th><th>Component</th><th>Urgency</th><th>Date</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>#BC-0047</td><td><strong>O+</strong></td><td>Whole Blood</td>
+            <td><span class="urg-dot high"></span>Immediately</td>
+            <td>12 Mar 2025</td>
+            <td><span class="pill done">Fulfilled</span></td>
+          </tr>
+          <tr>
+            <td>#BC-0046</td><td><strong>A+</strong></td><td>Platelets</td>
+            <td><span class="urg-dot med"></span>Within 2hrs</td>
+            <td>10 Mar 2025</td>
+            <td><span class="pill active">In progress</span></td>
+          </tr>
+          <tr>
+            <td>#BC-0045</td><td><strong>B−</strong></td><td>Plasma</td>
+            <td><span class="urg-dot low"></span>Reserve 4hrs</td>
+            <td>28 Feb 2025</td>
+            <td><span class="pill done">Fulfilled</span></td>
+          </tr>
+          <tr>
+            <td>#BC-0044</td><td><strong>AB+</strong></td><td>Whole Blood</td>
+            <td><span class="urg-dot high"></span>Immediately</td>
+            <td>20 Feb 2025</td>
+            <td><span class="pill miss">No donor found</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+</div>
+<script src="bc-app.js"></script>
+</body>
+</html>

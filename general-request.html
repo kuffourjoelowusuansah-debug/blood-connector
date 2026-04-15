@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Blood Connector — General Blood Request</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,700;0,9..144,900;1,9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+:root{--red:#B91C1C;--red-deep:#7F1D1D;--red-light:#FEF2F2;--red-soft:#FECACA;--red-mid:#FCA5A5;--ink:#0F0A0A;--ink-2:#3D2929;--muted:#6B5B5B;--subtle:#A8938E;--border:#EFE4E4;--cream:#FDFAF9;--warn:#92400E;--warn-bg:#FFFBEB;--warn-border:#FDE68A;--success:#15803D;--success-bg:#F0FDF4;--success-border:#BBF7D0;}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Plus Jakarta Sans',sans-serif;color:var(--ink);background:var(--cream);-webkit-font-smoothing:antialiased}
+.topbar{background:#fff;border-bottom:1px solid var(--border);padding:0 32px;display:flex;align-items:center;justify-content:space-between;height:56px;position:sticky;top:0;z-index:100}
+.logo{display:flex;align-items:center;gap:9px;text-decoration:none}
+.logo-mark{width:22px;height:22px;background:var(--red);border-radius:50% 50% 50% 4px;transform:rotate(-35deg)}
+.logo-name{font-family:'Fraunces',serif;font-size:16px;font-weight:700;color:var(--red)}
+.topbar-right{display:flex;align-items:center;gap:12px}
+.hosp-tag{font-size:12px;font-weight:600;color:var(--muted);background:var(--cream);border:1px solid var(--border);padding:5px 12px;border-radius:100px}
+.back-btn{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:500;color:var(--muted);cursor:pointer;background:none;border:none;font-family:'Plus Jakarta Sans',sans-serif;text-decoration:none}
+.wrap{max-width:780px;margin:0 auto;padding:40px 24px 72px}
+/* HEADER */
+.form-header{margin-bottom:32px}
+.type-switcher{display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap}
+.type-btn{padding:9px 18px;border-radius:9px;font-size:13px;font-weight:600;font-family:'Plus Jakarta Sans',sans-serif;cursor:pointer;border:1.5px solid var(--border);background:#fff;color:var(--muted);transition:all .2s;text-decoration:none;display:inline-flex;align-items:center;gap:7px}
+.type-btn.active{background:var(--red);color:#fff;border-color:var(--red)}
+.type-btn:hover:not(.active){border-color:var(--red-mid);color:var(--ink)}
+.form-badge{display:inline-flex;align-items:center;gap:7px;background:var(--red-light);border:1px solid var(--red-soft);color:var(--red);font-size:11px;font-weight:600;padding:4px 12px;border-radius:100px;letter-spacing:0.7px;text-transform:uppercase;margin-bottom:14px}
+.form-header h1{font-family:'Fraunces',serif;font-size:28px;font-weight:700;letter-spacing:-0.8px;margin-bottom:7px}
+.form-header p{font-size:14px;color:var(--muted);line-height:1.7;max-width:580px}
+/* INFO BAND */
+.info-band{background:var(--success-bg);border:1px solid var(--success-border);border-radius:12px;padding:16px 20px;display:flex;gap:12px;align-items:flex-start;margin-bottom:28px}
+.info-band h4{font-size:13px;font-weight:600;color:var(--success);margin-bottom:4px}
+.info-band p{font-size:13px;color:#166534;line-height:1.65}
+/* CARDS */
+.form-card{background:#fff;border:1px solid var(--border);border-radius:16px;padding:28px;margin-bottom:18px}
+.card-title{font-family:'Fraunces',serif;font-size:17px;font-weight:700;color:var(--ink);letter-spacing:-0.3px;margin-bottom:20px;display:flex;align-items:center;gap:10px}
+.card-icon{width:30px;height:30px;background:var(--red-light);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+/* FIELDS */
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:18px}
+.field-group{margin-bottom:18px}
+label{display:block;font-size:12px;font-weight:600;color:var(--ink-2);margin-bottom:5px}
+label .req{color:var(--red)}
+input[type=text],input[type=number],input[type=email],input[type=date],input[type=time],select,textarea{width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:9px;font-size:14px;font-family:'Plus Jakarta Sans',sans-serif;color:var(--ink);background:#fff;outline:none;transition:border-color .2s;-webkit-appearance:none;appearance:none}
+input:focus,select:focus,textarea:focus{border-color:var(--red)}
+input::placeholder,textarea::placeholder{color:#C4B4B4;font-size:13px}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23A8938E' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px;cursor:pointer}
+textarea{resize:vertical;min-height:90px;line-height:1.6}
+.field-hint{font-size:11px;color:var(--subtle);margin-top:5px;line-height:1.5}
+/* BLOOD TYPE GRID */
+.bt-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:6px}
+.bt-opt{position:relative}
+.bt-opt input{position:absolute;opacity:0;width:0;height:0}
+.bt-opt label{display:flex;align-items:center;justify-content:center;padding:12px 6px;border:1.5px solid var(--border);border-radius:9px;font-size:16px;font-weight:700;color:var(--muted);cursor:pointer;transition:all .2s;font-family:'Fraunces',serif;letter-spacing:-0.3px;margin-bottom:0}
+.bt-opt input:checked + label{border-color:var(--red);background:var(--red-light);color:var(--red)}
+.bt-opt label:hover{border-color:var(--red-mid)}
+/* ANY BLOOD TYPE OPTION */
+.any-opt{position:relative;grid-column:1/-1}
+.any-opt label{font-size:14px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;padding:10px 14px;justify-content:flex-start;gap:8px}
+/* URGENCY */
+.urg-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:6px}
+.urg-opt{position:relative}
+.urg-opt input{position:absolute;opacity:0;width:0;height:0}
+.urg-opt label{display:flex;flex-direction:column;padding:14px;border:1.5px solid var(--border);border-radius:10px;cursor:pointer;transition:all .2s;margin-bottom:0}
+.urg-opt input:checked + label{border-color:var(--red);background:var(--red-light)}
+.urg-dot{width:8px;height:8px;border-radius:50%;margin-bottom:8px}
+.ug-high .urg-dot{background:#DC2626}
+.ug-med .urg-dot{background:#D97706}
+.ug-low .urg-dot{background:var(--success)}
+.urg-title{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:3px}
+.urg-opt input:checked + label .urg-title{color:var(--red)}
+.urg-sub{font-size:11px;color:var(--muted);line-height:1.4}
+/* PURPOSE TAGS */
+.purpose-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:6px}
+.pur-opt{position:relative}
+.pur-opt input{position:absolute;opacity:0;width:0;height:0}
+.pur-opt label{display:flex;align-items:center;justify-content:center;text-align:center;padding:10px 8px;border:1.5px solid var(--border);border-radius:9px;font-size:13px;font-weight:500;color:var(--muted);cursor:pointer;transition:all .2s;margin-bottom:0;line-height:1.3;min-height:46px}
+.pur-opt input:checked + label{border-color:var(--red);background:var(--red-light);color:var(--red);font-weight:600}
+/* CONTACT */
+.phone-wrap{display:flex}
+.phone-prefix{padding:11px 14px;border:1.5px solid var(--border);border-right:none;border-radius:9px 0 0 9px;font-size:14px;font-weight:500;color:var(--ink-2);background:var(--cream);white-space:nowrap;display:flex;align-items:center;gap:6px}
+.phone-wrap input{border-radius:0 9px 9px 0;border-left:none}
+.phone-wrap:focus-within .phone-prefix,.phone-wrap:focus-within input{border-color:var(--red)}
+/* WARN */
+.warn-note{background:var(--warn-bg);border:1px solid var(--warn-border);border-radius:10px;padding:14px 16px;display:flex;gap:10px;margin-bottom:20px}
+.warn-note p{font-size:13px;color:var(--warn);line-height:1.6}
+/* AUTO */
+.auto-val{background:var(--cream);border:1px solid var(--border);border-radius:9px;padding:10px 14px;font-size:14px;color:var(--ink-2);font-weight:500}
+/* SUBMIT */
+.submit-row{display:flex;gap:12px;margin-top:24px}
+.btn-submit{flex:1;background:var(--red);color:#fff;border:none;padding:15px;border-radius:10px;font-size:15px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;cursor:pointer}
+.btn-submit:hover{background:var(--red-deep)}
+.btn-cancel{background:transparent;color:var(--muted);border:1px solid var(--border);padding:15px 24px;border-radius:10px;font-size:14px;font-family:'Plus Jakarta Sans',sans-serif;cursor:pointer}
+/* RESULT CARD */
+.result-card{background:#fff;border:2px solid var(--success-border);border-radius:16px;padding:28px;margin-top:24px;display:none}
+.result-card.show{display:block}
+.result-card h3{font-family:'Fraunces',serif;font-size:20px;font-weight:700;color:var(--ink);margin-bottom:8px}
+.result-card p{font-size:14px;color:var(--muted);margin-bottom:16px}
+.result-stats{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:18px}
+.rs{text-align:center;background:var(--cream);border-radius:10px;padding:12px 20px}
+.rs-val{font-family:'Fraunces',serif;font-size:24px;font-weight:700;color:var(--red)}
+.rs-lbl{font-size:11px;color:var(--muted);margin-top:2px}
+.btn-see-donors{background:var(--red);color:#fff;border:none;padding:13px 24px;border-radius:9px;font-size:14px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;cursor:pointer}
+@media(max-width:640px){
+  .topbar{padding:0 16px}
+  .wrap{padding:24px 14px 56px}
+  .form-card{padding:18px}
+  .field-row{grid-template-columns:1fr}
+  .bt-grid{grid-template-columns:repeat(4,1fr)}
+  .urg-grid,.purpose-grid{grid-template-columns:1fr}
+  .submit-row{flex-direction:column}
+}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <a class="logo" href="landing.html"><div class="logo-mark"></div><span class="logo-name">Blood Connector</span></a>
+  <div class="topbar-right">
+    <span class="hosp-tag">KATH, Kumasi</span>
+    <a class="back-btn" href="hospital-dashboard.html">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      Dashboard
+    </a>
+  </div>
+</div>
+
+<div class="wrap">
+  <!-- REQUEST TYPE SWITCHER -->
+  <div class="type-switcher">
+    <a class="type-btn active" href="general-request.html">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+      General blood request
+    </a>
+    <a class="type-btn" href="patient-request.html">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+      Patient-specific request
+    </a>
+  </div>
+
+  <div class="form-header">
+    <div class="form-badge">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2C8 2 5 5.5 5 9c0 5.5 7 13 7 13s7-7.5 7-13c0-3.5-3-7-7-7z"/></svg>
+      General request
+    </div>
+    <h1>General Blood Request</h1>
+    <p>Use this form when you need to find blood donors for your blood bank, general stock replenishment, community drives, or non-emergency situations without linking to a specific patient record.</p>
+  </div>
+
+  <div class="info-band">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#15803D" stroke-width="2" style="flex-shrink:0;margin-top:1px"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+    <div>
+      <h4>No patient details required</h4>
+      <p>This request is for general blood sourcing — community drives, blood bank replenishment, elective procedure preparation, or research purposes. Donors will be shown the purpose and matched accordingly. Donation remains fully voluntary.</p>
+    </div>
+  </div>
+
+  <!-- REQUEST DETAILS -->
+  <div class="form-card">
+    <div class="card-title">
+      <div class="card-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#B91C1C" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M9 12h6M9 8h6M9 16h4"/></svg></div>
+      Request details
+    </div>
+    <div class="field-row">
+      <div>
+        <label>Request reference</label>
+        <div class="auto-val" id="refNum">—</div>
+      </div>
+      <div>
+        <label>Requesting hospital</label>
+        <div class="auto-val">KATH, Kumasi</div>
+      </div>
+    </div>
+    <div class="field-row">
+      <div>
+        <label>Date submitted</label>
+        <div class="auto-val" id="autoDate">—</div>
+      </div>
+      <div>
+        <label>Requested by</label>
+        <input type="text" id="requestedBy" placeholder="Your name / department"/>
+      </div>
+    </div>
+  </div>
+
+  <!-- PURPOSE -->
+  <div class="form-card">
+    <div class="card-title">
+      <div class="card-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#B91C1C" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
+      Purpose of request
+    </div>
+    <div class="field-group">
+      <label>What is this blood needed for? <span class="req">*</span></label>
+      <div class="purpose-grid">
+        <div class="pur-opt"><input type="radio" name="purpose" id="p1" value="Blood bank replenishment"/><label for="p1">Blood bank replenishment</label></div>
+        <div class="pur-opt"><input type="radio" name="purpose" id="p2" value="Community blood drive"/><label for="p2">Community blood drive</label></div>
+        <div class="pur-opt"><input type="radio" name="purpose" id="p3" value="Elective surgery preparation"/><label for="p3">Elective surgery prep</label></div>
+        <div class="pur-opt"><input type="radio" name="purpose" id="p4" value="Maternity / obstetric readiness"/><label for="p4">Maternity / obstetric readiness</label></div>
+        <div class="pur-opt"><input type="radio" name="purpose" id="p5" value="Paediatric ward stock"/><label for="p5">Paediatric ward stock</label></div>
+        <div class="pur-opt"><input type="radio" name="purpose" id="p6" value="Other"/><label for="p6">Other</label></div>
+      </div>
+    </div>
+    <div class="field-group" id="otherPurposeWrap" style="display:none">
+      <label>Describe purpose <span class="req">*</span></label>
+      <textarea id="otherPurpose" placeholder="Briefly describe what the blood will be used for..."></textarea>
+    </div>
+    <div class="field-group">
+      <label>Additional notes for donors</label>
+      <textarea placeholder="Any information donors should know before contacting you — e.g. collection time window, location within facility..."></textarea>
+      <div class="field-hint">This message is shown to matched donors when a hospital representative contacts them.</div>
+    </div>
+  </div>
+
+  <!-- BLOOD REQUIREMENTS -->
+  <div class="form-card">
+    <div class="card-title">
+      <div class="card-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#B91C1C" stroke-width="2"><path d="M12 2C8 2 5 5.5 5 9c0 5.5 7 13 7 13s7-7.5 7-13c0-3.5-3-7-7-7z"/></svg></div>
+      Blood requirements
+    </div>
+
+    <div class="field-group">
+      <label>Blood type needed <span class="req">*</span></label>
+      <div class="bt-grid">
+        <div class="bt-opt"><input type="radio" name="bt" id="bg_ap" value="A+"/><label for="bg_ap">A+</label></div>
+        <div class="bt-opt"><input type="radio" name="bt" id="bg_am" value="A-"/><label for="bg_am">A−</label></div>
+        <div class="bt-opt"><input type="radio" name="bt" id="bg_bp" value="B+"/><label for="bg_bp">B+</label></div>
+        <div class="bt-opt"><input type="radio" name="bt" id="bg_bm" value="B-"/><label for="bg_bm">B−</label></div>
+        <div class="bt-opt"><input type="radio" name="bt" id="bg_abp" value="AB+"/><label for="bg_abp">AB+</label></div>
+        <div class="bt-opt"><input type="radio" name="bt" id="bg_abm" value="AB-"/><label for="bg_abm">AB−</label></div>
+        <div class="bt-opt"><input type="radio" name="bt" id="bg_op" value="O+"/><label for="bg_op">O+</label></div>
+        <div class="bt-opt"><input type="radio" name="bt" id="bg_om" value="O-"/><label for="bg_om">O−</label></div>
+        <div class="any-opt bt-opt"><input type="radio" name="bt" id="bg_any" value="Any"/><label for="bg_any">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          Any blood type — all active donors
+        </label></div>
+      </div>
+      <div class="field-hint">Selecting "Any" will match you with all active donors regardless of blood type — useful for general drives.</div>
+    </div>
+
+    <div class="field-row">
+      <div>
+        <label>Component type <span class="req">*</span></label>
+        <select id="component">
+          <option value="" disabled selected>Select component</option>
+          <option>Whole Blood</option>
+          <option>Platelets</option>
+          <option>Plasma</option>
+          <option>Double Red Cells</option>
+          <option>Leukocytes Depleted</option>
+          <option>Any / Multiple components</option>
+        </select>
+      </div>
+      <div>
+        <label>Target number of donors <span class="req">*</span></label>
+        <input type="number" id="targetDonors" min="1" max="500" placeholder="e.g. 10"/>
+        <div class="field-hint">How many donors are you hoping to recruit for this request?</div>
+      </div>
+    </div>
+
+    <div class="field-row">
+      <div>
+        <label>Preferred donation date</label>
+        <input type="date" id="prefDate"/>
+      </div>
+      <div>
+        <label>Preferred time window</label>
+        <div style="display:flex;gap:8px">
+          <input type="time" id="timeFrom" style="flex:1" placeholder="From"/>
+          <input type="time" id="timeTo" style="flex:1" placeholder="To"/>
+        </div>
+      </div>
+    </div>
+
+    <div class="field-group">
+      <label>Priority level</label>
+      <div class="urg-grid">
+        <div class="urg-opt ug-low">
+          <input type="radio" name="priority" id="pr_low"/>
+          <label for="pr_low">
+            <div class="urg-dot"></div>
+            <div class="urg-title">Routine</div>
+            <div class="urg-sub">No urgency — general replenishment or preparation</div>
+          </label>
+        </div>
+        <div class="urg-opt ug-med">
+          <input type="radio" name="priority" id="pr_med"/>
+          <label for="pr_med">
+            <div class="urg-dot"></div>
+            <div class="urg-title">Moderate</div>
+            <div class="urg-sub">Stocks are low — needed within the next few days</div>
+          </label>
+        </div>
+        <div class="urg-opt ug-high">
+          <input type="radio" name="priority" id="pr_high"/>
+          <label for="pr_high">
+            <div class="urg-dot"></div>
+            <div class="urg-title">High</div>
+            <div class="urg-sub">Critically low — needed urgently to maintain safe stock</div>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTACT -->
+  <div class="form-card">
+    <div class="card-title">
+      <div class="card-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#B91C1C" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.41 2 2 0 0 1 3.6 1.22h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 8.73a16 16 0 0 0 6.29 6.29l.38-.38a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 21.22 17"/></svg></div>
+      Contact for this request
+    </div>
+    <div class="field-row">
+      <div>
+        <label>Contact name <span class="req">*</span></label>
+        <input type="text" id="contactName" placeholder="Name of person handling donations"/>
+      </div>
+      <div>
+        <label>Contact role</label>
+        <input type="text" placeholder="e.g. Blood Bank Manager, Nurse"/>
+      </div>
+    </div>
+    <div class="field-row">
+      <div>
+        <label>Contact phone <span class="req">*</span></label>
+        <div class="phone-wrap">
+          <div class="phone-prefix">🇬🇭 +233</div>
+          <input type="tel" id="contactPhone" placeholder="24 000 0000" style="border-radius:0 9px 9px 0"/>
+        </div>
+        <div class="field-hint">This number will be used in the WhatsApp link for donors to contact.</div>
+      </div>
+      <div>
+        <label>Contact email</label>
+        <input type="email" placeholder="Optional — for confirmation receipts"/>
+      </div>
+    </div>
+    <div class="field-group">
+      <label>Donation location within facility</label>
+      <input type="text" placeholder="e.g. Blood Bank Lab, Ground Floor, Block A"/>
+    </div>
+  </div>
+
+  <div class="warn-note">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#92400E" stroke-width="2" style="flex-shrink:0;margin-top:1px"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    <p><strong>Reminder:</strong> Blood donation is always voluntary. Donors must never be pressured or offered financial compensation. This request will be matched to active donors in your area. All contact is via WhatsApp — inform donors clearly that participation is entirely their choice.</p>
+  </div>
+
+  <div class="submit-row">
+    <button class="btn-cancel" onclick="history.back()">Cancel</button>
+    <button class="btn-submit" id="submitBtn" onclick="submitGeneralRequest()">Find matching donors →</button>
+  </div>
+
+  <!-- RESULT CARD -->
+  <div class="result-card" id="resultCard">
+    <h3>Request submitted — donors found!</h3>
+    <p id="resultDesc">Your general request has been logged. Here is a summary of available donors matching your criteria.</p>
+    <div class="result-stats" id="resultStats"></div>
+    <button class="btn-see-donors" onclick="location.href='donor-results.html'">View all matched donors →</button>
+  </div>
+</div>
+
+<script src="bc-app.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+  // Auto-fill
+  document.getElementById('refNum').textContent = BC.generateRef('GEN');
+  document.getElementById('autoDate').textContent = BC.formatDate(new Date());
+
+  // Show other purpose textarea
+  document.querySelectorAll('input[name="purpose"]').forEach(r => {
+    r.addEventListener('change', function(){
+      document.getElementById('otherPurposeWrap').style.display =
+        this.value === 'Other' ? 'block' : 'none';
+    });
+  });
+});
+
+function submitGeneralRequest(){
+  const bt = document.querySelector('input[name="bt"]:checked');
+  const purpose = document.querySelector('input[name="purpose"]:checked');
+  const component = document.getElementById('component').value;
+  const target = document.getElementById('targetDonors').value;
+  const contactPhone = document.getElementById('contactPhone').value;
+  const contactName = document.getElementById('contactName').value;
+
+  const errors = [];
+  if(!bt) errors.push('Select a blood type or "Any"');
+  if(!purpose) errors.push('Select a purpose for this request');
+  if(!component) errors.push('Select a component type');
+  if(!target) errors.push('Enter target number of donors');
+  if(!contactPhone) errors.push('Enter a contact phone number');
+  if(!contactName) errors.push('Enter a contact name');
+
+  if(errors.length){
+    BC.showToast(errors[0], 'error');
+    return;
+  }
+
+  const bloodType = bt.value;
+  const donors = bloodType === 'Any'
+    ? BC.getAllActiveDonors()
+    : BC.getMatchingDonors(bloodType);
+
+  const req = {
+    id: document.getElementById('refNum').textContent,
+    type: 'general',
+    bloodType,
+    purpose: purpose.value,
+    component,
+    targetDonors: parseInt(target),
+    contactName,
+    contactPhone,
+    hospital: 'KATH, Kumasi',
+    createdAt: new Date().toISOString(),
+    matchedDonors: donors.length
+  };
+  BC.saveRequest(req);
+
+  const card = document.getElementById('resultCard');
+  const stats = document.getElementById('resultStats');
+  const desc = document.getElementById('resultDesc');
+
+  const exact = donors.filter(d => d.bloodType === bloodType).length;
+  const compat = donors.length - exact;
+
+  stats.innerHTML = `
+    <div class="rs"><div class="rs-val">${donors.length}</div><div class="rs-lbl">Matched donors</div></div>
+    ${bloodType !== 'Any' ? `<div class="rs"><div class="rs-val">${exact}</div><div class="rs-lbl">Exact type</div></div>
+    <div class="rs"><div class="rs-val">${compat}</div><div class="rs-lbl">Compatible</div></div>` : ''}
+    <div class="rs"><div class="rs-val">${Math.min(donors.length, parseInt(target))}</div><div class="rs-lbl">Can meet target</div></div>
+  `;
+  desc.textContent = `Your general request (${req.id}) has been logged for ${bloodType} blood — ${donors.length} active donors matched in your area.`;
+  card.classList.add('show');
+  card.scrollIntoView({behavior:'smooth', block:'start'});
+  BC.showToast('Request submitted successfully!', 'success');
+}
+</script>
+</body>
+</html>

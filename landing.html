@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Blood Connector — Save Countless Lives Through The #DonateBloodGH Movement</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,700;0,9..144,900;1,9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --red:#B91C1C;--red-deep:#7F1D1D;--red-light:#FEF2F2;
+  --red-mid:#FCA5A5;--red-soft:#FECACA;
+  --ink:#0F0A0A;--ink-2:#3D2929;--muted:#6B5B5B;
+  --subtle:#A8938E;--border:#EFE4E4;--cream:#FDFAF9;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Plus Jakarta Sans',sans-serif;color:var(--ink);background:#fff;-webkit-font-smoothing:antialiased}
+nav{display:flex;align-items:center;justify-content:space-between;padding:16px 48px;border-bottom:1px solid var(--border);background:rgba(255,255,255,0.96);backdrop-filter:blur(8px);position:sticky;top:0;z-index:100}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.logo-mark{width:26px;height:26px;background:var(--red);border-radius:50% 50% 50% 4px;transform:rotate(-35deg);flex-shrink:0}
+.logo-name{font-family:'Fraunces',serif;font-size:18px;font-weight:700;color:var(--red);letter-spacing:-0.3px}
+.nav-mid{display:flex;gap:28px}
+.nav-mid a{font-size:13px;font-weight:500;color:var(--muted);text-decoration:none;transition:color .2s}
+.nav-mid a:hover{color:var(--ink)}
+.nav-r{display:flex;gap:10px;align-items:center}
+.btn-ghost{background:none;border:1px solid var(--border);color:var(--ink-2);padding:8px 18px;border-radius:8px;font-size:13px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:500;cursor:pointer}
+.btn-primary{background:var(--red);color:#fff;border:none;padding:9px 20px;border-radius:8px;font-size:13px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;cursor:pointer}
+/* HERO */
+.hero{padding:88px 48px 72px;display:flex;flex-direction:column;align-items:center;text-align:center;background:#fff;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-80px;right:-100px;width:500px;height:500px;background:var(--red-light);border-radius:50%;opacity:0.45;pointer-events:none}
+.hero::after{content:'';position:absolute;bottom:-100px;left:-80px;width:360px;height:360px;background:var(--red-light);border-radius:50%;opacity:0.3;pointer-events:none}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;background:var(--red-light);border:1px solid var(--red-soft);color:var(--red);font-size:11px;font-weight:600;padding:5px 14px;border-radius:100px;letter-spacing:0.8px;text-transform:uppercase;margin-bottom:28px;position:relative;z-index:1}
+.pulse{width:6px;height:6px;background:var(--red);border-radius:50%;animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.hero h1{font-family:'Fraunces',serif;font-size:66px;font-weight:900;line-height:1.04;letter-spacing:-2.5px;color:var(--ink);max-width:700px;margin:0 0 6px;position:relative;z-index:1}
+.hero h1 em{font-style:italic;color:var(--red);font-weight:700}
+.hero-sub{font-size:18px;font-weight:400;color:var(--muted);max-width:460px;line-height:1.75;margin:18px 0 40px;position:relative;z-index:1}
+.hero-btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-bottom:60px;position:relative;z-index:1}
+.btn-h1{background:var(--red);color:#fff;border:none;padding:15px 30px;border-radius:10px;font-size:15px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;cursor:pointer}
+.btn-h2{background:#fff;color:var(--ink-2);border:1.5px solid var(--border);padding:13px 28px;border-radius:10px;font-size:15px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:500;cursor:pointer}
+.stat-bar{display:flex;border:1px solid var(--border);border-radius:14px;overflow:hidden;background:#fff;box-shadow:0 8px 40px rgba(185,28,28,.07);position:relative;z-index:1}
+.stat-item{padding:22px 42px;text-align:center;flex:1;border-right:1px solid var(--border)}
+.stat-item:last-child{border-right:none}
+.stat-v{font-family:'Fraunces',serif;font-size:30px;font-weight:700;color:var(--red);letter-spacing:-1px;line-height:1}
+.stat-l{font-size:11px;font-weight:500;color:var(--subtle);margin-top:6px;text-transform:uppercase;letter-spacing:0.5px}
+/* SECTION */
+.sec-label{font-size:11px;font-weight:600;color:var(--red);letter-spacing:1.2px;text-transform:uppercase;display:flex;align-items:center;gap:8px;margin-bottom:14px}
+.sec-label::before{content:'';width:18px;height:1.5px;background:var(--red);display:block}
+.sec-h2{font-family:'Fraunces',serif;font-size:42px;font-weight:700;line-height:1.1;letter-spacing:-1.2px;color:var(--ink);margin-bottom:14px}
+.sec-h2 em{font-style:italic;color:var(--red)}
+.sec-p{font-size:15px;color:var(--muted);line-height:1.75;max-width:440px;margin-bottom:52px}
+/* HOW */
+.how{padding:88px 48px;background:var(--cream)}
+.how-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--border)}
+.step{background:var(--cream);padding:36px 28px;transition:background .2s}
+.step:hover{background:#fff}
+.step-n{font-family:'Fraunces',serif;font-size:12px;font-weight:700;color:var(--red-mid);letter-spacing:0.5px;margin-bottom:22px;display:block}
+.step h3{font-family:'Fraunces',serif;font-size:19px;font-weight:700;color:var(--ink);line-height:1.2;margin-bottom:9px;letter-spacing:-0.2px}
+.step p{font-size:13px;color:var(--muted);line-height:1.7}
+/* WHO */
+.who{padding:88px 48px;display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.wcard{border-radius:20px;padding:40px 32px;border:1px solid var(--border)}
+.wcard.light{background:var(--cream)}
+.wcard.dark{background:var(--red);border-color:var(--red)}
+.cbadge{display:inline-block;font-size:11px;font-weight:600;letter-spacing:0.8px;text-transform:uppercase;padding:4px 12px;border-radius:100px;margin-bottom:22px}
+.wcard.light .cbadge{background:var(--red-light);color:var(--red)}
+.wcard.dark .cbadge{background:rgba(255,255,255,.15);color:rgba(255,255,255,.9)}
+.wcard h3{font-family:'Fraunces',serif;font-size:30px;font-weight:700;line-height:1.1;letter-spacing:-0.8px;margin-bottom:10px}
+.wcard.light h3{color:var(--ink)}
+.wcard.dark h3{color:#fff}
+.wcard .cdesc{font-size:14px;line-height:1.7;margin-bottom:24px}
+.wcard.light .cdesc{color:var(--muted)}
+.wcard.dark .cdesc{color:rgba(255,255,255,.7)}
+.flist{list-style:none;margin-bottom:28px}
+.flist li{font-size:13px;padding:8px 0;display:flex;align-items:center;gap:9px;border-bottom:1px solid}
+.wcard.light .flist li{color:var(--ink-2);border-color:var(--border)}
+.wcard.dark .flist li{color:rgba(255,255,255,.85);border-color:rgba(255,255,255,.12)}
+.flist li:last-child{border-bottom:none}
+.tick{width:17px;height:17px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:9px;font-weight:700}
+.wcard.light .tick{background:var(--red-light);color:var(--red)}
+.wcard.dark .tick{background:rgba(255,255,255,.2);color:#fff}
+.prow{margin-bottom:24px}
+.pamount{font-family:'Fraunces',serif;font-size:34px;font-weight:700;letter-spacing:-1px;line-height:1}
+.wcard.light .pamount{color:var(--red)}
+.wcard.dark .pamount{color:#fff}
+.pperiod{font-size:13px;font-weight:400;font-family:'Plus Jakarta Sans',sans-serif}
+.wcard.light .pperiod{color:var(--subtle)}
+.wcard.dark .pperiod{color:rgba(255,255,255,.5)}
+.btn-full-red{width:100%;background:var(--red);color:#fff;border:none;padding:13px;border-radius:10px;font-size:14px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;cursor:pointer}
+.btn-full-white{width:100%;background:#fff;color:var(--red);border:none;padding:13px;border-radius:10px;font-size:14px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;cursor:pointer}
+/* COMPLIANCE BAND */
+.comp-band{padding:44px 48px;background:#0F0A0A;display:flex;align-items:center;gap:32px}
+.comp-icon{width:52px;height:52px;border-radius:12px;background:rgba(185,28,28,.3);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.comp-band h3{font-family:'Fraunces',serif;font-size:22px;font-weight:700;color:#fff;letter-spacing:-0.4px;margin-bottom:6px}
+.comp-band p{font-size:13px;color:rgba(255,255,255,.5);line-height:1.6;max-width:680px}
+/* CTA */
+.cta{padding:88px 48px;background:var(--red);text-align:center;position:relative;overflow:hidden}
+.cta::before{content:'';position:absolute;top:-80px;left:50%;transform:translateX(-50%);width:600px;height:600px;background:rgba(255,255,255,.04);border-radius:50%}
+.cta-eye{font-size:11px;font-weight:600;color:rgba(255,255,255,.55);letter-spacing:1.2px;text-transform:uppercase;margin-bottom:18px}
+.cta h2{font-family:'Fraunces',serif;font-size:54px;font-weight:900;color:#fff;letter-spacing:-1.5px;line-height:1.05;margin:0 0 14px;position:relative;z-index:1}
+.cta h2 em{font-style:italic;opacity:.8}
+.cta p{font-size:16px;color:rgba(255,255,255,.7);margin:0 0 36px;line-height:1.7}
+.cta-btns{display:flex;gap:12px;justify-content:center;position:relative;z-index:1}
+.btn-cw{background:#fff;color:var(--red);border:none;padding:14px 30px;border-radius:10px;font-size:15px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;cursor:pointer}
+.btn-cb{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.4);padding:13px 28px;border-radius:10px;font-size:15px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:500;cursor:pointer}
+footer{background:#0F0A0A;padding:36px 48px;display:flex;align-items:center;justify-content:space-between}
+.flogo{font-family:'Fraunces',serif;font-size:17px;font-weight:700;color:#fff}
+footer p{font-size:12px;color:#5a4747}
+.flinks{display:flex;gap:22px}
+.flinks a{font-size:12px;color:#5a4747;text-decoration:none}
+@media(max-width:860px){
+  nav{padding:14px 18px}.nav-mid{display:none}
+  .hero{padding:56px 18px 48px}.hero h1{font-size:40px;letter-spacing:-1.5px}
+  .stat-bar{flex-wrap:wrap}.stat-item{flex:1 1 45%;border-bottom:1px solid var(--border)}
+  .how{padding:56px 18px}.how-grid{grid-template-columns:1fr}
+  .who{padding:56px 18px;grid-template-columns:1fr}
+  .comp-band{flex-direction:column;padding:28px 18px}
+  .cta{padding:56px 18px}.cta h2{font-size:36px}
+  footer{flex-direction:column;gap:14px;padding:24px 18px;text-align:center}
+  .sec-h2{font-size:30px}
+}
+</style>
+</head>
+<body>
+<nav>
+  <a class="logo" href="#"><div class="logo-mark"></div><span class="logo-name">Blood Connector</span></a>
+  <div class="nav-mid">
+    <a href="#how">How it works</a>
+    <a href="#donors">For donors</a>
+    <a href="#hospitals">For hospitals</a>
+  </div>
+  <div class="nav-r">
+    <button class="btn-ghost" onclick="SignIn.open('donor')">Sign in</button>
+    <button class="btn-primary" onclick="location.href='donor-terms.html'">Get started</button>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="eyebrow"><span class="pulse"></span>Ghana's verified blood network</div>
+  <h1>The right blood,<br><em>right when needed.</em></h1>
+  <p class="hero-sub">Verified donors. Compatible matches. Direct contact. Blood Connector bridges the gap between patients and donors across Ghana — fast.</p>
+  <div class="hero-btns">
+    <button class="btn-h1" onclick="location.href='donor-terms.html'">Become a donor — it's free</button>
+    <button class="btn-h2" onclick="location.href='hospital-terms.html'">Register your hospital</button>
+  </div>
+  <div class="stat-bar">
+    <div class="stat-item"><div class="stat-v">8</div><div class="stat-l">Blood types</div></div>
+    <div class="stat-item"><div class="stat-v">GHS 0</div><div class="stat-l">Donor cost</div></div>
+    <div class="stat-item"><div class="stat-v">NIA</div><div class="stat-l">Verified identity</div></div>
+    <div class="stat-item"><div class="stat-v">24/7</div><div class="stat-l">Always available</div></div>
+  </div>
+</section>
+
+<section class="how" id="how">
+  <div style="max-width:560px;margin-bottom:52px">
+    <div class="sec-label">How it works</div>
+    <h2 class="sec-h2">From request to donation<br><em>in minutes</em></h2>
+    <p class="sec-p">No middlemen. No waiting rooms. Hospitals find donors, connect on WhatsApp, and save lives — all through one platform.</p>
+  </div>
+  <div class="how-grid">
+    <div class="step"><span class="step-n">01</span><h3>Hospital submits a request</h3><p>Fill in patient details, blood type, urgency level, and component type using the NBS-aligned form.</p></div>
+    <div class="step"><span class="step-n">02</span><h3>Donors matched instantly</h3><p>All compatible active donors nearby surface — sorted by proximity and blood type compatibility, no cap on results.</p></div>
+    <div class="step"><span class="step-n">03</span><h3>Contact via WhatsApp</h3><p>One tap opens a WhatsApp chat directly with the donor. Real conversations, right away.</p></div>
+    <div class="step"><span class="step-n">04</span><h3>Donation confirmed</h3><p>Hospital marks it complete. Donor's record updates automatically. Donor-only confirmations are flagged.</p></div>
+    <div class="step"><span class="step-n">05</span><h3>Lives saved across Ghana</h3><p>Every donation is logged. Every donor builds a verified giving record. Every hospital builds a reliable blood network.</p></div>
+    <div class="step"><span class="step-n">06</span><h3>Donor recognition</h3><p>Committed donors are recognised with a certificate of honour at 10 successful confirmed donations.</p></div>
+  </div>
+</section>
+
+<section class="who" id="donors">
+  <div class="wcard light">
+    <span class="cbadge">For donors</span>
+    <h3>Give blood.<br>Save Countless Lives.</h3>
+    <p class="cdesc">Sign up free, pass verification, and toggle active when ready. Donation is always voluntary — on your terms.</p>
+    <ul class="flist">
+      <li><span class="tick">✓</span>Free to join — always</li>
+      <li><span class="tick">✓</span>Ghana Card verification</li>
+      <li><span class="tick">✓</span>Liveness face detection</li>
+      <li><span class="tick">✓</span>Active / inactive toggle</li>
+      <li><span class="tick">✓</span>Certificate at 10 donations</li>
+      <li><span class="tick">✓</span>Must read and accept T&amp;Cs</li>
+    </ul>
+    <div class="prow"><span class="pamount">Free<span class="pperiod"> forever</span></span></div>
+    <button class="btn-full-red" onclick="location.href='donor-terms.html'">Sign up as a donor</button>
+  </div>
+  <div class="wcard dark" id="hospitals">
+    <span class="cbadge">For hospitals &amp; clinics</span>
+    <h3>Find the right blood, fast.</h3>
+    <p class="cdesc">Access Ghana's growing network of NIA-verified, proximity-ranked donors. One subscription, unlimited searches.</p>
+    <ul class="flist">
+      <li><span class="tick">✓</span>Full donor search access</li>
+      <li><span class="tick">✓</span>Blood type + proximity matching</li>
+      <li><span class="tick">✓</span>Direct WhatsApp contact</li>
+      <li><span class="tick">✓</span>NBS-aligned request form</li>
+      <li><span class="tick">✓</span>Full donation history records</li>
+      <li><span class="tick">✓</span>Must read and accept T&amp;Cs</li>
+    </ul>
+    <div class="prow"><span class="pamount">GHS 300<span class="pperiod"> / month</span></span></div>
+    <button class="btn-full-white" onclick="location.href='hospital-terms.html'">Register your facility</button>
+  </div>
+</section>
+
+<div class="comp-band">
+  <div class="comp-icon">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FCA5A5" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+  </div>
+  <div>
+    <h3>Legal compliance &amp; ethical standards</h3>
+    <p>Blood Connector operates under Ghana's Health Facilities Regulation Authority (HeFRA), the National Blood Service Act, Data Protection Act 2012 (Act 843), and the Criminal Offences Act. Blood is not a commodity. All donations are strictly voluntary. Any misuse of this platform — including solicitation of payment for blood — is a criminal offence. All users must accept our compliance declaration before accessing the platform.</p>
+  </div>
+</div>
+
+<section class="cta">
+  <div class="cta-eye">Join Blood Connector today</div>
+  <h2>Ready to save<br><em>a life?</em></h2>
+  <p>Free for donors. Simple for hospitals. Built for Ghana.</p>
+  <div class="cta-btns">
+    <button class="btn-cw" onclick="location.href='donor-terms.html'">Sign up as donor</button>
+    <button class="btn-cb" onclick="location.href='hospital-terms.html'">Register hospital</button>
+  </div>
+</section>
+
+<footer>
+  <div><div class="flogo">Blood Connector</div><p style="margin-top:4px">Built for Ghana. Powered by community.</p></div>
+  <div class="flinks"><a href="#">Privacy policy</a><a href="#">Terms of service</a><a href="#">Contact</a></div>
+  <p>Copyright © 2026 Blood Connector. All Rights Reserved. Developed by Titan Incorporated Limited.</p>
+</footer>
+<script src="bc-app.js"></script>
+</body>
+</html>

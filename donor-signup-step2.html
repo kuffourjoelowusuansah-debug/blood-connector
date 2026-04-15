@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Blood Connector — Ghana Card Verification</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,700;0,9..144,900;1,9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+:root{--red:#B91C1C;--red-deep:#7F1D1D;--red-light:#FEF2F2;--red-soft:#FECACA;--red-mid:#FCA5A5;--ink:#0F0A0A;--ink-2:#3D2929;--muted:#6B5B5B;--subtle:#A8938E;--border:#EFE4E4;--cream:#FDFAF9;--success:#15803D;--success-bg:#F0FDF4;--success-border:#BBF7D0;}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Plus Jakarta Sans',sans-serif;color:var(--ink);background:var(--cream);-webkit-font-smoothing:antialiased;min-height:100vh}
+nav{display:flex;align-items:center;justify-content:space-between;padding:14px 48px;border-bottom:1px solid var(--border);background:#fff}
+.logo{display:flex;align-items:center;gap:9px;text-decoration:none}
+.logo-mark{width:24px;height:24px;background:var(--red);border-radius:50% 50% 50% 4px;transform:rotate(-35deg)}
+.logo-name{font-family:'Fraunces',serif;font-size:17px;font-weight:700;color:var(--red)}
+.nav-back{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:500;color:var(--muted);cursor:pointer;background:none;border:none;font-family:'Plus Jakarta Sans',sans-serif;text-decoration:none}
+.page{display:grid;grid-template-columns:1fr 460px;min-height:calc(100vh - 53px)}
+/* LEFT */
+.left{background:var(--red);padding:52px 44px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden}
+.left::before{content:'';position:absolute;bottom:-80px;right:-80px;width:360px;height:360px;background:rgba(255,255,255,.05);border-radius:50%}
+.left::after{content:'';position:absolute;top:-60px;left:-60px;width:240px;height:240px;background:rgba(255,255,255,.04);border-radius:50%}
+.left-top{position:relative;z-index:1}
+.left-tag{display:inline-block;background:rgba(255,255,255,.15);color:rgba(255,255,255,.9);font-size:11px;font-weight:600;padding:4px 12px;border-radius:100px;letter-spacing:0.8px;text-transform:uppercase;margin-bottom:26px}
+.left h2{font-family:'Fraunces',serif;font-size:38px;font-weight:700;color:#fff;line-height:1.1;letter-spacing:-1.2px;margin-bottom:12px}
+.left h2 em{font-style:italic;opacity:.8}
+.left p{font-size:14px;color:rgba(255,255,255,.7);line-height:1.7;max-width:300px}
+.sp-label{font-size:11px;font-weight:600;color:rgba(255,255,255,.5);letter-spacing:0.8px;text-transform:uppercase;margin-bottom:14px}
+.sp-steps{display:flex;flex-direction:column;position:relative;z-index:1}
+.sp-step{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.1)}
+.sp-step:last-child{border-bottom:none}
+.sp-dot{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:10px;font-weight:700}
+.sp-step.done .sp-dot{background:rgba(255,255,255,.3);color:#fff}
+.sp-step.active .sp-dot{background:#fff;color:var(--red)}
+.sp-step.pending .sp-dot{background:rgba(255,255,255,.1);color:rgba(255,255,255,.35)}
+.sp-title{font-size:13px;font-weight:600;color:#fff}
+.sp-step.pending .sp-title{color:rgba(255,255,255,.4)}
+.sp-step.done .sp-title{color:rgba(255,255,255,.7)}
+.sp-sub{font-size:11px;color:rgba(255,255,255,.45);margin-top:2px}
+.sp-step.active .sp-sub{color:rgba(255,255,255,.65)}
+/* NIA CARD VISUAL */
+.nia-card{position:relative;z-index:1;margin-top:28px}
+.nia-label{font-size:11px;font-weight:600;color:rgba(255,255,255,.5);letter-spacing:0.8px;text-transform:uppercase;margin-bottom:12px}
+.card-mock{background:linear-gradient(135deg,rgba(255,255,255,.15),rgba(255,255,255,.08));border:1px solid rgba(255,255,255,.2);border-radius:12px;padding:16px;display:flex;gap:12px;align-items:center}
+.card-photo{width:44px;height:56px;background:rgba(255,255,255,.15);border-radius:6px;display:flex;align-items:center;justify-content:center}
+.card-info{}
+.card-info p{font-size:10px;color:rgba(255,255,255,.5);margin-bottom:3px}
+.card-info .ci-val{font-size:12px;color:rgba(255,255,255,.85);font-weight:500}
+.card-chip{width:20px;height:14px;background:rgba(255,220,0,.4);border-radius:3px;margin-bottom:8px}
+/* RIGHT */
+.right{background:#fff;padding:44px 40px;overflow-y:auto}
+.form-eyebrow{font-size:11px;font-weight:600;color:var(--red);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:7px}
+.form-eyebrow::before{content:'';width:14px;height:1.5px;background:var(--red);display:block}
+.form-top h1{font-family:'Fraunces',serif;font-size:28px;font-weight:700;letter-spacing:-0.7px;color:var(--ink);margin-bottom:7px}
+.form-top p{font-size:13px;color:var(--muted);line-height:1.65;margin-bottom:30px}
+.fdiv-label{font-size:12px;font-weight:600;color:var(--ink);margin:24px 0 15px;display:flex;align-items:center;gap:10px}
+.fdiv-label::after{content:'';flex:1;height:1px;background:var(--border)}
+.field-group{margin-bottom:18px}
+label{display:block;font-size:12px;font-weight:600;color:var(--ink-2);margin-bottom:5px}
+label .req{color:var(--red)}
+input[type=text]{width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:9px;font-size:14px;font-family:'Plus Jakarta Sans',sans-serif;color:var(--ink);background:#fff;outline:none;transition:border-color .2s}
+input:focus{border-color:var(--red)}
+input::placeholder{color:#C4B4B4;font-size:13px}
+.field-hint{font-size:11px;color:var(--subtle);margin-top:5px;line-height:1.5}
+/* UPLOAD ZONES */
+.upload-zone{border:2px dashed var(--border);border-radius:12px;padding:22px;text-align:center;cursor:pointer;transition:border-color .2s,background .2s;background:#fff;position:relative;margin-top:6px}
+.upload-zone:hover,.upload-zone.has-file{border-color:var(--red-mid);background:var(--red-light)}
+.upload-zone.has-file{border-style:solid;border-color:var(--red)}
+.upload-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.upload-icon{width:38px;height:38px;background:var(--red-light);border-radius:9px;display:flex;align-items:center;justify-content:center;margin:0 auto 10px}
+.upload-zone.has-file .upload-icon{background:rgba(185,28,28,.15)}
+.upload-zone h4{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:3px}
+.upload-zone p{font-size:12px;color:var(--subtle)}
+.upload-zone .types{font-size:11px;color:var(--red);font-weight:500;margin-top:5px}
+.upload-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px}
+/* CARD NUMBER FORMAT */
+.card-num-wrap{position:relative}
+.card-num-wrap input{letter-spacing:1px;font-size:15px;font-family:'Fraunces',serif;font-weight:700}
+.card-format-hint{position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:11px;color:var(--subtle);pointer-events:none}
+/* NOTICE */
+.notice{background:var(--red-light);border:1px solid var(--red-soft);border-radius:10px;padding:14px 16px;display:flex;gap:10px;margin-bottom:20px}
+.notice p{font-size:13px;color:var(--red-deep);line-height:1.65}
+/* VERIFY STATE */
+.verify-status{display:none;background:var(--success-bg);border:1px solid var(--success-border);border-radius:10px;padding:14px 16px;display:flex;gap:10px;align-items:center;margin-top:18px}
+.verify-status p{font-size:13px;color:var(--success);font-weight:500}
+/* SUBMIT */
+.btn-submit{width:100%;background:var(--red);color:#fff;border:none;padding:15px;border-radius:10px;font-size:15px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;cursor:pointer;transition:background .2s;margin-top:28px}
+.btn-submit:hover{background:var(--red-deep)}
+.form-note{font-size:12px;color:var(--subtle);text-align:center;margin-top:12px;line-height:1.6}
+.form-note a{color:var(--red);text-decoration:none;font-weight:500}
+@media(max-width:860px){
+  .page{grid-template-columns:1fr}
+  .left{padding:32px 18px;min-height:auto}
+  .left h2{font-size:28px}
+  .sp-steps{display:none}
+  .nia-card{display:none}
+  .right{padding:28px 18px}
+  .upload-row{grid-template-columns:1fr}
+  nav{padding:14px 18px}
+}
+</style>
+</head>
+<body>
+<nav>
+  <a class="logo" href="landing.html"><div class="logo-mark"></div><span class="logo-name">Blood Connector</span></a>
+  <a class="nav-back" href="donor-signup-step1.html">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+    Back to step 1
+  </a>
+</nav>
+
+<div class="page">
+  <!-- LEFT PANEL -->
+  <div class="left">
+    <div class="left-top">
+      <span class="left-tag">Identity verification</span>
+      <h2>Verify your<br><em>Ghana Card</em></h2>
+      <p>Your identity is verified securely through the National Identification Authority (NIA) API. Your card details are never stored beyond verification.</p>
+    </div>
+    <div>
+      <div class="sp-label">Your progress</div>
+      <div class="sp-steps">
+        <div class="sp-step done">
+          <div class="sp-dot">✓</div>
+          <div><div class="sp-title">Personal information</div><div class="sp-sub">Completed</div></div>
+        </div>
+        <div class="sp-step active">
+          <div class="sp-dot">2</div>
+          <div><div class="sp-title">Ghana Card verification</div><div class="sp-sub">NIA identity check</div></div>
+        </div>
+        <div class="sp-step pending">
+          <div class="sp-dot">3</div>
+          <div><div class="sp-title">Liveness detection</div><div class="sp-sub">Real-time face capture</div></div>
+        </div>
+        <div class="sp-step pending">
+          <div class="sp-dot">4</div>
+          <div><div class="sp-title">Profile live</div><div class="sp-sub">You're on the network</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="nia-card">
+      <div class="nia-label">Sample — Ghana Card format</div>
+      <div class="card-mock">
+        <div>
+          <div class="card-chip"></div>
+          <div class="card-photo">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.5)" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+          </div>
+        </div>
+        <div class="card-info">
+          <p>Card number format</p>
+          <div class="ci-val">GHA-000000000-0</div>
+          <p style="margin-top:6px">Issued by</p>
+          <div class="ci-val">National Identification Authority</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT FORM -->
+  <div class="right">
+    <div class="form-eyebrow">Step 2 of 3</div>
+    <div class="form-top">
+      <h1>Ghana Card verification</h1>
+      <p>Enter your Ghana Card number exactly as it appears on your card and upload clear photos of the front and back. Your details will be verified in real time with the NIA.</p>
+    </div>
+
+    <div class="notice">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#B91C1C" stroke-width="2" style="flex-shrink:0;margin-top:1px"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      <p>You must submit your own genuine Ghana Card. Submitting another person's identity documents is a criminal offence under the <strong>NIA Act 2019 (Act 979)</strong> and the Criminal Offences Act.</p>
+    </div>
+
+    <div class="fdiv-label">Card details</div>
+
+    <div class="field-group">
+      <label>Ghana Card number <span class="req">*</span></label>
+      <div class="card-num-wrap">
+        <input type="text" id="cardNum" placeholder="GHA-000000000-0" maxlength="17" oninput="formatCard(this)"/>
+        <span class="card-format-hint">GHA-XXXXXXXXX-X</span>
+      </div>
+      <div class="field-hint">Found at the top of your Ghana Card. Format: GHA-000000000-0</div>
+    </div>
+
+    <div class="fdiv-label">Upload card photos</div>
+
+    <div class="upload-row">
+      <div>
+        <label>Front of Ghana Card <span class="req">*</span></label>
+        <div class="upload-zone" id="z1">
+          <input type="file" accept=".jpg,.jpeg,.png" onchange="fileSelected(this,'z1')"/>
+          <div class="upload-icon">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#B91C1C" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+          </div>
+          <h4>Front side</h4>
+          <p id="z1-txt">Your photo and name visible</p>
+          <div class="types">JPG, PNG — max 5MB</div>
+        </div>
+      </div>
+      <div>
+        <label>Back of Ghana Card <span class="req">*</span></label>
+        <div class="upload-zone" id="z2">
+          <input type="file" accept=".jpg,.jpeg,.png" onchange="fileSelected(this,'z2')"/>
+          <div class="upload-icon">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#B91C1C" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+          </div>
+          <h4>Back side</h4>
+          <p id="z2-txt">Barcode clearly visible</p>
+          <div class="types">JPG, PNG — max 5MB</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="fdiv-label">Photo guidelines</div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:24px">
+      <div style="background:var(--success-bg);border:1px solid var(--success-border);border-radius:9px;padding:12px 14px">
+        <div style="font-size:12px;font-weight:600;color:var(--success);margin-bottom:8px">✓ Good photo</div>
+        <ul style="font-size:12px;color:#166534;padding-left:14px;line-height:1.8">
+          <li>Full card visible</li>
+          <li>Well lit, no glare</li>
+          <li>Text clearly readable</li>
+          <li>No fingers covering text</li>
+        </ul>
+      </div>
+      <div style="background:var(--red-light);border:1px solid var(--red-soft);border-radius:9px;padding:12px 14px">
+        <div style="font-size:12px;font-weight:600;color:var(--red);margin-bottom:8px">✗ Avoid</div>
+        <ul style="font-size:12px;color:var(--red-deep);padding-left:14px;line-height:1.8">
+          <li>Blurry or dark photos</li>
+          <li>Cropped or cut-off card</li>
+          <li>Photocopies or scans</li>
+          <li>Edited or filtered images</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="fdiv-label">NIA verification</div>
+
+    <div style="background:var(--cream);border:1px solid var(--border);border-radius:12px;padding:18px;margin-bottom:8px">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+        <div style="width:36px;height:36px;background:var(--red-light);border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#B91C1C" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <div>
+          <div style="font-size:13px;font-weight:600;color:var(--ink)">Automatic NIA API verification</div>
+          <div style="font-size:12px;color:var(--muted)">Powered by the National Identification Authority</div>
+        </div>
+      </div>
+      <p style="font-size:13px;color:var(--muted);line-height:1.7">When you submit this form, your Ghana Card number and uploaded photos are automatically verified against NIA records. This process typically takes under 60 seconds. You will be notified immediately if verification passes or if any issue is detected.</p>
+    </div>
+
+    <button class="btn-submit" onclick="location.href='donor-signup-step3.html'">Submit for NIA verification →</button>
+    <p class="form-note">Your card data is processed only for identity verification under the <a href="#">NIA Act 2019 (Act 979)</a> and <a href="#">Data Protection Act 2012 (Act 843)</a>.</p>
+  </div>
+</div>
+
+<script>
+function formatCard(input){
+  let v=input.value.replace(/[^A-Za-z0-9]/g,'').toUpperCase();
+  let out='';
+  if(v.length>0)out='GHA';
+  if(v.length>3)out+= '-'+v.slice(3,12);
+  if(v.length>12)out+='-'+v.slice(12,13);
+  if(out.startsWith('GHA')&&v.slice(0,3)!=='GHA'&&v.length<=3)out=v;
+  input.value=out||v;
+}
+function fileSelected(input,zoneId){
+  const zone=document.getElementById(zoneId);
+  const txtId=zoneId+'-txt';
+  if(input.files&&input.files[0]){
+    zone.classList.add('has-file');
+    document.getElementById(txtId).textContent=input.files[0].name;
+  }
+}
+</script>
+<script src="bc-app.js"></script>
+</body>
+</html>
